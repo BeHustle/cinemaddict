@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Клева](https://up.htmlacademy.ru/ecmascript/11/user/972147).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Марков](https://htmlacademy.ru/profile/damarkov).
 
 ---
 
