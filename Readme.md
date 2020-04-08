@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Клева](https://up.htmlacademy.ru/ecmascript/11/user/972147).
-* Наставник: [Дмитрий Марков](https://htmlacademy.ru/profile/damarkov).
+* Наставник: [Алексей Лизурчик](https://htmlacademy.ru/profile/id1431185).
 
 ---
 
