@@ -1,5 +1,5 @@
-import {MAIN_FILMS_COUNT, OTHER_FILMS_COUNT} from "./components/constants";
-import {render, generateFilms} from "./components/util";
+import {MAIN_FILMS_COUNT, OTHER_FILMS_COUNT} from "./constants";
+import {render, renderList} from "./util";
 import {createStatistics} from "./components/statistics";
 import {createUserProfile} from "./components/user";
 import {createSort, createNavigation} from "./components/menu";
@@ -26,8 +26,8 @@ render(filmsSectionElement, createMostCommentedFilms());
 const topRatedSection = filmsSectionElement.querySelector(`#top-rated`);
 const mostCommentedSection = filmsSectionElement.querySelector(`#most-commented`);
 
-generateFilms(filmsContainerElement, createFilm(), MAIN_FILMS_COUNT);
-generateFilms(topRatedSection, createFilm(), OTHER_FILMS_COUNT);
-generateFilms(mostCommentedSection, createFilm(), OTHER_FILMS_COUNT);
+renderList(filmsContainerElement, createFilm(), MAIN_FILMS_COUNT);
+renderList(topRatedSection, createFilm(), OTHER_FILMS_COUNT);
+renderList(mostCommentedSection, createFilm(), OTHER_FILMS_COUNT);
 render(mainElement, createStatistics());
 render(bodyElement, createFilmPopup());
