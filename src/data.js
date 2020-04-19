@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomArrayElement, shuffleArray} from './util';
+import {getRandomNumber, getRandomArrayElement, shuffleArray, getRandomBoolean} from './util';
 
 const YEAR = 1000 * 60 * 60 * 24 * 365;
 const now = new Date();
@@ -52,7 +52,7 @@ const filmsData = {
   possibleActors: [2, 5],
   possibleGenres: [1, 3],
   possibleRating: [1.0, 10.0],
-  possibleYears: [1965, 2020],
+  possibleDates: [new Date(`1970`).getTime(), new Date(`2020`).getTime()],
   possibleDurations: [65, 190],
   possibleComments: [0, 5],
   possibleDescriptionLength: [1, 5],
@@ -92,7 +92,7 @@ const getRandomFilm = () => {
   const {
     titles, originalTitles, posters, genres, descriptions,
     directors, writers, actors, countries, ageRatings, possibleWriters, possibleActors, possibleGenres, possibleRating,
-    possibleYears, possibleDurations, possibleComments, possibleDescriptionLength, possibleCountries,
+    possibleDates, possibleDurations, possibleComments, possibleDescriptionLength, possibleCountries,
   } = filmsData;
   const title = getRandomArrayElement(titles);
   const originalTitle = getRandomArrayElement(originalTitles);
@@ -111,8 +111,12 @@ const getRandomFilm = () => {
     .slice(0, getRandomNumber(...possibleCountries));
   const ageRating = getRandomArrayElement(ageRatings);
   const rating = getRandomNumber(...possibleRating, 10);
-  const date = new Date(getRandomNumber(...possibleYears));
+  const date = new Date(getRandomNumber(...possibleDates));
   const duration = getRandomNumber(...possibleDurations);
+  const isFavorite = getRandomBoolean();
+  const isWatched = getRandomBoolean();
+  const inWatchlist = getRandomBoolean();
+
   const comments = [];
   for (let i = 0; i < getRandomNumber(...possibleComments); i++) {
     comments.push(getRandomComment());
@@ -122,6 +126,7 @@ const getRandomFilm = () => {
     title, originalTitle, poster, genre,
     description, director, writer, actor, country,
     ageRating, rating, date, duration, comments,
+    isFavorite, isWatched, inWatchlist
   };
 };
 

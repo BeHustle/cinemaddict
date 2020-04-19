@@ -12,7 +12,7 @@ const generateObjectsArray = (cb, count) => {
 
 const getRandomNumber = (min, max, round = 1) => {
   const rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.ceil((rand) * round) / round;
+  return Math.round((rand) * round) / round;
 };
 
 const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
@@ -41,4 +41,13 @@ const getMonthName = (dateObject) => {
   return monthNames[dateObject.getMonth()];
 };
 
-export {render, generateObjectsArray, getRandomNumber, getRandomArrayElement, getMonthName, shuffleArray};
+const getRandomBoolean = () => getRandomArrayElement([true, false]);
+
+const getFormatDuration = (duration) => {
+  const hours = Math.floor(duration / 60);
+  const minutes = Math.round(duration % 60);
+  return `${hours}h ${minutes}m`;
+};
+
+export {render, generateObjectsArray, getRandomNumber, getRandomBoolean,
+  getRandomArrayElement, getMonthName, shuffleArray, getFormatDuration};
