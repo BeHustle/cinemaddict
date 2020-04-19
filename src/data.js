@@ -8,6 +8,15 @@ const filmsData = {
     `The great Flamarion`,
     `The man with the golden arm`
   ],
+  originalTitles: [
+    `The Dance of Life`,
+    `Made of each Other`,
+    `Popeye meets Sinbad`,
+    `Sagebrush trail`,
+    `Santa Claus Conquers the Martians`,
+    `The great Flamarion`,
+    `The man with the golden arm`
+  ],
   posters: [
     `made-for-each-other.png`,
     `popeye-meets-sinbad.png`,
@@ -17,10 +26,7 @@ const filmsData = {
     `the-great-flamarion.jpg`,
     `the-man-with-the-golden-arm.jpg`,
   ],
-  possibleRating: [1.0, 10.0],
-  possibleYears: [1965, 2020],
-  possibleDurations: [65, 190],
-  genres: [`Drama`, `Fantastic`, `Melodrama`, `Horror`, `Thriller`],
+  genres: [`Drama`, `Fantastic`, `Melodrama`, `Horror`, `Thriller`, `Film-Noir`, `Mystery`],
   descriptions: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
     `Cras aliquet varius magna, non porta ligula feugiat eget`,
@@ -32,5 +38,18 @@ const filmsData = {
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`,
   ],
-  possibleComments: [1, 10],
+  directors: [`Anthony Mann`, `Robert B Weide`, `Christopher Nolan`, `J J Abrams`],
+  writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`, `Crhis Partymaker`, `Stas Pyeha`],
+  actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`, `Samuel Jackson`, `Christian Bale`, `Alan Rickman`],
+  countries: [`USA`, `Russia`, `New Zeland`, `Great Britain`, `Spain`, `China`, `Japan`],
+  ageRating: [`0+`, `6+`, `12+`, `16+`, `18+`],
+  possibleWriters: [1, 3],
+  possibleActors: [2, 5],
+  possibleGenres: [1, 3],
+  possibleRating: [1.0, 10.0],
+  possibleYears: [1965, 2020],
+  possibleDurations: [65, 190],
+  possibleComments: [0, 5],
+  possibleDescriptionLength: [1, 5],
+  possibleCountries: [1, 3],
 };

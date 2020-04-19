@@ -30,4 +30,4 @@ renderList(filmsContainerElement, createFilm(), MAIN_FILMS_COUNT);
 renderList(topRatedSection, createFilm(), OTHER_FILMS_COUNT);
 renderList(mostCommentedSection, createFilm(), OTHER_FILMS_COUNT);
 render(mainElement, createStatistics());
-//render(bodyElement, createFilmPopup());
+render(bodyElement, createFilmPopup());
