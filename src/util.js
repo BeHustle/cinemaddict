@@ -2,10 +2,12 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const renderList = (container, template, count) => {
+const generateObjectsArray = (cb, count) => {
+  const array = [];
   for (let i = 0; i < count; i++) {
-    render(container, template);
+    array.push(cb());
   }
+  return array;
 };
 
 const getRandomNumber = (min, max, round = 1) => {
@@ -39,4 +41,4 @@ const getMonthName = (dateObject) => {
   return monthNames[dateObject.getMonth()];
 };
 
-export {render, renderList, getRandomNumber, getRandomArrayElement, getMonthName, shuffleArray};
+export {render, generateObjectsArray, getRandomNumber, getRandomArrayElement, getMonthName, shuffleArray};
