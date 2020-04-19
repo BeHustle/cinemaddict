@@ -1,10 +1,10 @@
-import {MAIN_FILMS_COUNT, OTHER_FILMS_COUNT} from "./constants";
-import {render, renderList} from "./util";
-import {createStatistics} from "./components/statistics";
-import {createUserProfile} from "./components/user";
-import {createSort, createNavigation} from "./components/menu";
-import {createFilmsSection, createFilmPopup, createFilm, createMostCommentedFilms, createTopRatedFilms} from "./components/films";
-import {createShowMoreButton} from "./components/buttons";
+import {MAIN_FILMS_COUNT, OTHER_FILMS_COUNT} from './constants';
+import {render, renderList} from './util';
+import {createStatistics} from './components/statistics';
+import {createUserProfile} from './components/user';
+import {createSort, createNavigation} from './components/menu';
+import {createFilmsSection, createFilmPopup, createFilm, createMostCommentedFilms, createTopRatedFilms} from './components/films';
+import {createShowMoreButton} from './components/buttons';
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -30,4 +30,4 @@ renderList(filmsContainerElement, createFilm(), MAIN_FILMS_COUNT);
 renderList(topRatedSection, createFilm(), OTHER_FILMS_COUNT);
 renderList(mostCommentedSection, createFilm(), OTHER_FILMS_COUNT);
 render(mainElement, createStatistics());
-render(bodyElement, createFilmPopup());
+//render(bodyElement, createFilmPopup());
