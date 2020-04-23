@@ -43,8 +43,7 @@ showMoreButton.addEventListener(`click`, (evt) => {
   const prevFilmsCount = showingFilmsCount;
   showingFilmsCount += MAIN_FILMS_COUNT_BY_BUTTON;
   evt.preventDefault();
-  mainFilms.slice(prevFilmsCount, showingFilmsCount)
-    .forEach((film) => render(filmsContainerElement, createFilm(film)));
+  mainFilms.slice(prevFilmsCount, showingFilmsCount).forEach((film) => render(filmsContainerElement, createFilm(film)));
   if (showingFilmsCount >= mainFilms.length) {
     showMoreButton.remove();
   }

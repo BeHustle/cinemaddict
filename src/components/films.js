@@ -1,4 +1,4 @@
-import {getFormatDuration, getMonthName} from "../util";
+import {getFormatDuration, getMonthName, getCommentFormatDate} from "../util";
 
 const createTopRatedFilms = () => {
   return (`<section class="films-list--extra">
@@ -22,12 +22,12 @@ const createFilm = (film) => {
   const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
   const {
     title, rating, date, duration,
-    genre, description, poster, comments,
+    genres, description, poster, comments,
     isFavourite, isWatched, inWatchlist,
   } = film;
   const filmYear = date.getFullYear();
   const filmDuration = getFormatDuration(duration);
-  const filmGenre = genre.join(`, `);
+  const filmGenre = genres.join(`, `);
   const countComments = `${comments.length} comments`;
   const favoriteFilm = isFavourite ? CONTROLS_ACTIVE_BTN_CLASS : ``;
   const watchedFilm = isWatched ? CONTROLS_ACTIVE_BTN_CLASS : ``;
@@ -53,11 +53,9 @@ const createFilm = (film) => {
 };
 
 const createFilmGenres = (genres) => {
-  let template = ``;
-  genres.forEach((genre) => {
-    template += `<span class="film-details__genre">${genre}</span>`;
-  });
-  return template;
+  return genres.reduce((acc, cv) => {
+    return acc + `<span class="film-details__genre">${cv}</span>`;
+  }, ``);
 };
 
 const createFilmControls = (isWatched, inWatchlist, isFavorite) => {
@@ -77,14 +75,9 @@ const createFilmControls = (isWatched, inWatchlist, isFavorite) => {
 };
 
 const createCommentsSection = (comments) => {
-  let commentsTemplate = ``;
-  const getCommentDate = (date) => {
-    return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
-  };
-  if (comments) {
-    comments.forEach((comment) => {
-      const {author, text, emoji, date} = comment;
-      commentsTemplate += `<li class="film-details__comment">
+  const commentsTemplate = comments ? comments.reduce((acc, cv) => {
+    const {author, text, emoji, date} = cv;
+    return acc + `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
             </span>
@@ -92,13 +85,12 @@ const createCommentsSection = (comments) => {
               <p class="film-details__comment-text">${text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${getCommentDate(date)}</span>
+                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
           </li>`;
-    });
-  }
+  }, ``) : ``;
   return (`<section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
@@ -140,16 +132,16 @@ const createCommentsSection = (comments) => {
 
 const createFilmPopup = (film) => {
   const {
-    title, originalTitle, rating, director, writer, poster,
-    actor, date, duration, country, genre, description,
-    ageRating, isFavorite, isWatched, inWatchlist, comments
+    title, originalTitle, rating, director, writers, poster,
+    actors, date, duration, countries, genres, description,
+    ageRating, isFavorite, isWatched, inWatchlist, comments,
   } = film;
-  const filmWriters = writer.join(`, `);
-  const filmActors = actor.join(`, `);
+  const filmWriters = writers.join(`, `);
+  const filmActors = actors.join(`, `);
   const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
   const filmDuration = getFormatDuration(duration);
-  const filmCountries = country.join(`, `);
-  const filmGenresTemplate = createFilmGenres(genre);
+  const filmCountries = countries.join(`, `);
+  const filmGenresTemplate = createFilmGenres(genres);
   const filmControlsSection = createFilmControls(isWatched, inWatchlist, isFavorite);
   const filmComments = createCommentsSection(comments);
 

@@ -1,6 +1,6 @@
 import {getRandomNumber, getRandomArrayElement, shuffleArray, getRandomBoolean} from './util';
 
-const YEAR = 1000 * 60 * 60 * 24 * 365;
+const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 365;
 const now = new Date();
 
 const filmsData = {
@@ -31,7 +31,7 @@ const filmsData = {
     `the-great-flamarion.jpg`,
     `the-man-with-the-golden-arm.jpg`,
   ],
-  genres: [`Drama`, `Fantastic`, `Melodrama`, `Horror`, `Thriller`, `Film-Noir`, `Mystery`],
+  genresData: [`Drama`, `Fantastic`, `Melodrama`, `Horror`, `Thriller`, `Film-Noir`, `Mystery`],
   descriptions: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit`,
     `Cras aliquet varius magna, non porta ligula feugiat eget`,
@@ -44,9 +44,9 @@ const filmsData = {
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`,
   ],
   directors: [`Anthony Mann`, `Robert B Weide`, `Christopher Nolan`, `J J Abrams`],
-  writers: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`, `Crhis Partymaker`, `Stas Pyeha`],
-  actors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`, `Samuel Jackson`, `Christian Bale`, `Alan Rickman`],
-  countries: [`USA`, `Russia`, `New Zeland`, `Great Britain`, `Spain`, `China`, `Japan`],
+  writersData: [`Anne Wigton`, `Heinz Herald`, `Richard Weil`, `Crhis Partymaker`, `Stas Pyeha`],
+  actorsData: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`, `Samuel Jackson`, `Christian Bale`, `Alan Rickman`],
+  countriesData: [`USA`, `Russia`, `New Zeland`, `Great Britain`, `Spain`, `China`, `Japan`],
   ageRatings: [`0+`, `6+`, `12+`, `16+`, `18+`],
   possibleWriters: [1, 3],
   possibleActors: [2, 5],
@@ -74,7 +74,7 @@ const commentData = {
   ],
   emojis: [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`],
   possibleTextLength: [1, 4],
-  possibleDates: [now.getTime() - YEAR, now.getTime()],
+  possibleDates: [now.getTime() - YEAR_IN_MS, now.getTime()],
 };
 
 const getRandomComment = () => {
@@ -90,24 +90,40 @@ const getRandomComment = () => {
 
 const getRandomFilm = () => {
   const {
-    titles, originalTitles, posters, genres, descriptions,
-    directors, writers, actors, countries, ageRatings, possibleWriters, possibleActors, possibleGenres, possibleRating,
-    possibleDates, possibleDurations, possibleComments, possibleDescriptionLength, possibleCountries,
+    titles,
+    originalTitles,
+    posters,
+    genresData,
+    descriptions,
+    directors,
+    writersData,
+    actorsData,
+    countriesData,
+    ageRatings,
+    possibleWriters,
+    possibleActors,
+    possibleGenres,
+    possibleRating,
+    possibleDates,
+    possibleDurations,
+    possibleComments,
+    possibleDescriptionLength,
+    possibleCountries,
   } = filmsData;
   const title = getRandomArrayElement(titles);
   const originalTitle = getRandomArrayElement(originalTitles);
   const poster = getRandomArrayElement(posters);
-  const genre = shuffleArray(genres)
+  const genres = shuffleArray(genresData)
     .slice(0, getRandomNumber(...possibleGenres));
   const description = shuffleArray(descriptions)
     .slice(0, getRandomNumber(...possibleDescriptionLength))
     .join(`. `);
   const director = getRandomArrayElement(directors);
-  const writer = shuffleArray(writers)
+  const writers = shuffleArray(writersData)
     .slice(0, getRandomNumber(...possibleWriters));
-  const actor = shuffleArray(actors)
+  const actors = shuffleArray(actorsData)
     .slice(0, getRandomNumber(...possibleActors));
-  const country = shuffleArray(countries)
+  const countries = shuffleArray(countriesData)
     .slice(0, getRandomNumber(...possibleCountries));
   const ageRating = getRandomArrayElement(ageRatings);
   const rating = getRandomNumber(...possibleRating, 10);
@@ -123,10 +139,23 @@ const getRandomFilm = () => {
   }
 
   return {
-    title, originalTitle, poster, genre,
-    description, director, writer, actor, country,
-    ageRating, rating, date, duration, comments,
-    isFavorite, isWatched, inWatchlist
+    title,
+    originalTitle,
+    poster,
+    genres,
+    description,
+    director,
+    writers,
+    actors,
+    countries,
+    ageRating,
+    rating,
+    date,
+    duration,
+    comments,
+    isFavorite,
+    isWatched,
+    inWatchlist,
   };
 };
 

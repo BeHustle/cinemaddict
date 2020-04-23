@@ -1,43 +1,28 @@
 const getFiltersData = function (films) {
-  const Filter = function (title, count) {
-    this.title = title;
-    this.count = count;
+  const getFilterCount = (title, flag) => {
+    return {
+      title,
+      count: films.filter((film) => film[flag]).length,
+    };
   };
-  const filterData = [
-    new Filter(`Watchlist`, 0),
-    new Filter(`History`, 0),
-    new Filter(`Favorites`, 0),
+
+  return [
+    getFilterCount(`History`, `isWatched`),
+    getFilterCount(`Watchlist`, `inWatchlist`),
+    getFilterCount(`Favorites`, `isFavorite`),
   ];
-  const incrementFilterValue = (boolean, key) => {
-    if (boolean) {
-      for (const filter of filterData) {
-        if (filter.title === key) {
-          filter.count++;
-          break;
-        }
-      }
-    }
-  };
-  films.forEach((film) => {
-    const {inWatchlist, isWatched, isFavorite} = film;
-    incrementFilterValue(inWatchlist, `Watchlist`);
-    incrementFilterValue(isWatched, `History`);
-    incrementFilterValue(isFavorite, `Favorites`);
-  });
-  return filterData;
 };
 
 const createFilter = (films) => {
   const filtersData = getFiltersData(films);
-  let filters = ``;
-  filtersData.forEach((filter) => {
-    const {title, count} = filter;
-    filters += `<a href="#${title}" class="main-navigation__item">${title} <span class="main-navigation__item-count">${count}</span></a>`;
-  });
+  const initialFilter = `<a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>`;
+  const filters = filtersData.reduce((acc, cv) => {
+    return acc + `<a href="#${cv.title}" class="main-navigation__item">${cv.title} <span class="main-navigation__item-count">${cv.count}</span></a>`;
+  }, initialFilter);
 
   return (`<nav class="main-navigation">
     <div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
+
       ${filters}
     </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>

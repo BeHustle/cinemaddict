@@ -49,5 +49,18 @@ const getFormatDuration = (duration) => {
   return `${hours}h ${minutes}m`;
 };
 
-export {render, generateObjectsArray, getRandomNumber, getRandomBoolean,
-  getRandomArrayElement, getMonthName, shuffleArray, getFormatDuration};
+const getCommentFormatDate = (date) => {
+  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+};
+
+export {
+  render,
+  generateObjectsArray,
+  getRandomNumber,
+  getRandomBoolean,
+  getRandomArrayElement,
+  getMonthName,
+  shuffleArray,
+  getFormatDuration,
+  getCommentFormatDate
+};
