@@ -1,4 +1,4 @@
-import {getFormatDuration, getMonthName, getCommentFormatDate} from "../util";
+import Util from "../Util";
 
 const createTopRatedFilms = () => {
   return (`<section class="films-list--extra">
@@ -26,7 +26,7 @@ const createFilm = (film) => {
     isFavourite, isWatched, inWatchlist,
   } = film;
   const filmYear = date.getFullYear();
-  const filmDuration = getFormatDuration(duration);
+  const filmDuration = Util.getFormatDuration(duration);
   const filmGenre = genres.join(`, `);
   const countComments = `${comments.length} comments`;
   const favoriteFilm = isFavourite ? CONTROLS_ACTIVE_BTN_CLASS : ``;
@@ -85,7 +85,7 @@ const createCommentsSection = (comments) => {
               <p class="film-details__comment-text">${text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
+                <span class="film-details__comment-day">${Util.getCommentFormatDate(date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
@@ -138,8 +138,8 @@ const createFilmPopup = (film) => {
   } = film;
   const filmWriters = writers.join(`, `);
   const filmActors = actors.join(`, `);
-  const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
-  const filmDuration = getFormatDuration(duration);
+  const filmReleaseDate = `${date.getDate()} ${Util.getMonthName(date)} ${date.getFullYear()}`;
+  const filmDuration = Util.getFormatDuration(duration);
   const filmCountries = countries.join(`, `);
   const filmGenresTemplate = createFilmGenres(genres);
   const filmControlsSection = createFilmControls(isWatched, inWatchlist, isFavorite);
@@ -228,4 +228,10 @@ const createFilmsSection = () => {
   </section>`);
 };
 
-export {createTopRatedFilms, createMostCommentedFilms, createFilm, createFilmPopup, createFilmsSection};
+export {
+  createTopRatedFilms,
+  createMostCommentedFilms,
+  createFilm,
+  createFilmPopup,
+  createFilmsSection
+};
