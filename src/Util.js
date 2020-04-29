@@ -1,19 +1,27 @@
 export default class Util {
-  static render(container, template, place = `beforeend`) {
-    container.insertAdjacentHTML(place, template);
-  }
 
-  static generateObjectsArray(cb, count) {
-    const array = [];
-    for (let i = 0; i < count; i++) {
-      array.push(cb());
+  static render(container, component, place = `beforeend`) {
+    switch (place) {
+      case `afterbegin`:
+        container.prepend(component.getElement());
+        break;
+      case `beforeend`:
+        container.append(component.getElement());
+        break;
     }
-    return array;
   }
 
   static getRandomNumber(min, max, round = 1) {
     const rand = min - 0.5 + Math.random() * (max - min + 1);
     return Math.round((rand) * round) / round;
+  }
+
+
+  static createElement(template) {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = template;
+
+    return newElement.firstChild;
   }
 
   static getRandomArrayElement(array) {

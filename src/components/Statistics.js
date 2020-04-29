@@ -1,3 +1,5 @@
+import Util from "../Util";
+
 export default class Statistics {
   getTemplate() {
     return (`<section class="statistic">
@@ -45,5 +47,17 @@ export default class Statistics {
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
   </section>`);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Util.createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }

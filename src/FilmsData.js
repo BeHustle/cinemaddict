@@ -115,8 +115,7 @@ export default class FilmsData {
 
     const comments = [];
     for (let i = 0; i < Util.getRandomNumber(...this._filmsData.possibleComments); i++) {
-      const comment = this._getRandomComment;
-      comments.push(comment);
+      comments.push(this._getRandomComment());
     }
 
     return {
@@ -138,5 +137,13 @@ export default class FilmsData {
       isWatched,
       inWatchlist,
     };
+  }
+
+  getRandomFilms(count) {
+    const array = [];
+    for (let i = 0; i < count; i++) {
+      array.push(this.getRandomFilm());
+    }
+    return array;
   }
 }

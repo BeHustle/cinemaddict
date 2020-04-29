@@ -1,3 +1,5 @@
+import Util from "../Util";
+
 export default class Filter {
   constructor(films) {
     this._films = films;
@@ -31,5 +33,17 @@ export default class Filter {
     </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Util.createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
   }
 }

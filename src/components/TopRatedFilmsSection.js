@@ -1,8 +1,13 @@
 import Util from "../Util";
 
-export default class MoreButton {
+export default class TopRatedFilmsSection {
   getTemplate() {
-    return `<button class="films-list__show-more">Show more</button>`;
+    return (`<section class="films-list--extra">
+      <h2 class="films-list__title">Top rated</h2>
+
+      <div class="films-list__container" id="top-rated">
+      </div>
+    </section>`);
   }
 
   getElement() {
@@ -17,4 +22,3 @@ export default class MoreButton {
     this._element = null;
   }
 }
-
