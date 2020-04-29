@@ -55,8 +55,27 @@ mainFilms.slice(0, showingFilmsCount).forEach((film) => {
   filmCard.onTitleClick(createFilmPopup);
   Util.render(filmsContainerElement, filmCard);
 });
-topRatedFilms.forEach((film) => Util.render(topRatedSection, new FilmCard(film)));
-mostCommentedFilms.forEach((film) => Util.render(mostCommentedSection, new FilmCard(film)));
+topRatedFilms.forEach((film) => {
+  const filmCard = new FilmCard(film);
+  const filmPopup = new FilmPopup(film);
+  const createFilmPopup = () => Util.render(bodyElement, filmPopup);
+
+  filmCard.onCommentsClick(createFilmPopup);
+  filmCard.onPosterClick(createFilmPopup);
+  filmCard.onTitleClick(createFilmPopup);
+  Util.render(topRatedSection, filmCard);
+});
+
+mostCommentedFilms.forEach((film) => {
+  const filmCard = new FilmCard(film);
+  const filmPopup = new FilmPopup(film);
+  const createFilmPopup = () => Util.render(bodyElement, filmPopup);
+
+  filmCard.onCommentsClick(createFilmPopup);
+  filmCard.onPosterClick(createFilmPopup);
+  filmCard.onTitleClick(createFilmPopup);
+  Util.render(mostCommentedSection, filmCard);
+});
 Util.render(mainElement, statistics);
 
 showMoreButton.addEventListener(`click`, (evt) => {
