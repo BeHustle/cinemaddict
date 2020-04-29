@@ -47,25 +47,25 @@ export default class FilmCard {
     return this._element;
   }
 
-  addPosterClickListener() {
+  onPosterClick(cb) {
     this
       .getElement()
       .querySelector(`img`)
-      .addEventListener(`click`, () => {});
+      .addEventListener(`click`, () => cb());
   }
 
-  addImgClickListener() {
+  onTitleClick(cb) {
     this
       .getElement()
       .querySelector(`.film-card__title`)
-      .addEventListener(`click`, () => {});
+      .addEventListener(`click`, () => cb());
   }
 
-  addCommentsClickListener() {
+  onCommentsClick(cb) {
     this
       .getElement()
       .querySelector(`.film-card__comments`)
-      .addEventListener(`click`, () => {});
+      .addEventListener(`click`, () => cb());
   }
 
   removeElement() {

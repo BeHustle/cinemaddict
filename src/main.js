@@ -48,16 +48,12 @@ const showMoreButton = document.querySelector(`.films-list__show-more`);
 mainFilms.slice(0, showingFilmsCount).forEach((film) => {
   const filmCard = new FilmCard(film);
   const filmPopup = new FilmPopup(film);
+  const createFilmPopup = () => Util.render(bodyElement, filmPopup);
 
-
-  filmCard.addPosterClickListener();
-  filmCard.addImgClickListener();
-  filmCard.addCommentsClickListener();
-
-  filmPopup.addCloseBtnClickListener();
-
+  filmCard.onCommentsClick(createFilmPopup);
+  filmCard.onPosterClick(createFilmPopup);
+  filmCard.onTitleClick(createFilmPopup);
   Util.render(filmsContainerElement, filmCard);
-  Util.render(bodyElement, filmPopup);
 });
 topRatedFilms.forEach((film) => Util.render(topRatedSection, new FilmCard(film)));
 mostCommentedFilms.forEach((film) => Util.render(mostCommentedSection, new FilmCard(film)));

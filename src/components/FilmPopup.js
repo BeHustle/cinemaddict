@@ -3,6 +3,10 @@ import Util from "../Util";
 export default class FilmPopup {
   constructor(film) {
     this._film = film;
+    this
+      .getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, () => Util.deleteElement(this));
   }
 
   _createFilmGenres(genres) {
@@ -180,12 +184,5 @@ export default class FilmPopup {
 
   removeElement() {
     this._element = null;
-  }
-
-  addCloseBtnClickListener() {
-    this
-      .getElement()
-      .querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, () => {});
   }
 }

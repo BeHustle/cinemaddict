@@ -24,6 +24,10 @@ export default class Util {
     return newElement.firstChild;
   }
 
+  static deleteElement(component) {
+    component.getElement().remove();
+  }
+
   static getRandomArrayElement(array) {
     return array[Math.floor(Math.random() * array.length)];
   }
