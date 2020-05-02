@@ -1,6 +1,6 @@
 import {MAIN_FILMS_COUNT, TOP_RATED_FILMS_COUNT, MOST_COMMENTED_FILMS_COUNT,
   MAIN_FILMS_COUNT_ON_START, MAIN_FILMS_COUNT_BY_BUTTON} from './constants';
-import {render} from "./util";
+import {render} from "./utils/render";
 import Statistics from "./components/statistics";
 import UserProfile from "./components/user-profile";
 import Sort from "./components/sort";

@@ -1,4 +1,4 @@
-import {getFormatDuration} from '../util';
+import {getFormatDuration} from "../utils/date-time";
 import AbstractComponent from './abstract-component';
 
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;

@@ -1,9 +1,5 @@
-import {
-  getRandomArrayElement,
-  shuffleArray,
-  getRandomBoolean,
-  getRandomNumber
-} from "./util";
+import {getRandomBoolean, getRandomNumber} from './utils/random';
+import {getRandomArrayElement, shuffleArray} from './utils/array';
 
 const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 365;
 const now = new Date();

@@ -2,7 +2,7 @@ import {
   getCommentFormatDate,
   getMonthName,
   getFormatDuration
-} from '../util';
+} from '../utils/date-time';
 import AbstractComponent from './abstract-component';
 
 export default class FilmPopup extends AbstractComponent {
