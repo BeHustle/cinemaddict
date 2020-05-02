@@ -1,4 +1,9 @@
-import Util from "../Util";
+import {
+  createElement,
+  getFormatDuration
+} from "../util";
+
+const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 
 export default class FilmCard {
   constructor(film) {
@@ -6,14 +11,13 @@ export default class FilmCard {
   }
 
   getTemplate() {
-    const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
     const {
       title, rating, date, duration,
       genres, description, poster, comments,
       isFavourite, isWatched, inWatchlist,
     } = this._film;
     const filmYear = date.getFullYear();
-    const filmDuration = Util.getFormatDuration(duration);
+    const filmDuration = getFormatDuration(duration);
     const filmGenre = genres.join(`, `);
     const countComments = `${comments.length} comments`;
     const favoriteFilm = isFavourite ? CONTROLS_ACTIVE_BTN_CLASS : ``;
@@ -41,31 +45,27 @@ export default class FilmCard {
 
   getElement() {
     if (!this._element) {
-      this._element = Util.createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
   }
 
-  onPosterClick(cb) {
+  onShowPopup(cb) {
     this
       .getElement()
       .querySelector(`img`)
-      .addEventListener(`click`, () => cb());
-  }
+      .addEventListener(`click`, cb);
 
-  onTitleClick(cb) {
     this
       .getElement()
       .querySelector(`.film-card__title`)
-      .addEventListener(`click`, () => cb());
-  }
+      .addEventListener(`click`, cb);
 
-  onCommentsClick(cb) {
     this
       .getElement()
       .querySelector(`.film-card__comments`)
-      .addEventListener(`click`, () => cb());
+      .addEventListener(`click`, cb);
   }
 
   removeElement() {

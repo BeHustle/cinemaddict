@@ -1,4 +1,4 @@
-import Util from "../Util";
+import {createElement} from "../util";
 
 export default class Filter {
   constructor(films) {
@@ -28,16 +28,14 @@ export default class Filter {
     }, initialFilter);
 
     return (`<nav class="main-navigation">
-    <div class="main-navigation__items">
-      ${filters}
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
-  </nav>`);
+      <div class="main-navigation__items">${filters}</div>
+      <a href="#stats" class="main-navigation__additional">Stats</a>
+    </nav>`);
   }
 
   getElement() {
     if (!this._element) {
-      this._element = Util.createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;

@@ -1,17 +1,18 @@
-import Util from "../Util";
+import {
+  getCommentFormatDate,
+  getMonthName,
+  getFormatDuration,
+  createElement
+} from "../util";
 
 export default class FilmPopup {
   constructor(film) {
     this._film = film;
-    this
-      .getElement()
-      .querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, () => Util.deleteElement(this));
   }
 
   _createFilmGenres(genres) {
     return genres.reduce((acc, cv) => {
-      return acc + `<span class="film-details__genre">${cv}</span>`;
+      return `${acc} <span class="film-details__genre">${cv}</span>`;
     }, ``);
   }
 
@@ -42,7 +43,7 @@ export default class FilmPopup {
               <p class="film-details__comment-text">${text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${Util.getCommentFormatDate(date)}</span>
+                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
@@ -95,8 +96,8 @@ export default class FilmPopup {
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
-    const filmReleaseDate = `${date.getDate()} ${Util.getMonthName(date)} ${date.getFullYear()}`;
-    const filmDuration = Util.getFormatDuration(duration);
+    const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
+    const filmDuration = getFormatDuration(duration);
     const filmCountries = countries.join(`, `);
     const filmGenresTemplate = this._createFilmGenres(genres);
     const filmControlsSection = this._createFilmControls(isWatched, inWatchlist, isFavorite);
@@ -176,10 +177,24 @@ export default class FilmPopup {
 
   getElement() {
     if (!this._element) {
-      this._element = Util.createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
+  }
+
+  onClosePopup(cb) {
+    this
+      .getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, cb);
+  }
+
+  removeCloseBtnListener(cb) {
+    this
+      .getElement()
+      .querySelector(`.film-details__close-btn`)
+      .removeEventListener(`click`, cb);
   }
 
   removeElement() {

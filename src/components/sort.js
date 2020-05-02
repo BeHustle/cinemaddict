@@ -1,4 +1,4 @@
-import Util from "../Util";
+import {createElement} from "../util";
 
 export default class Sort {
   getTemplate() {
@@ -11,7 +11,7 @@ export default class Sort {
 
   getElement() {
     if (!this._element) {
-      this._element = Util.createElement(this.getTemplate());
+      this._element = createElement(this.getTemplate());
     }
 
     return this._element;
