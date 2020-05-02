@@ -1,5 +1,8 @@
-const createStatistics = () => {
-  return (`<section class="statistic">
+import {createElement} from "../util";
+
+export default class Statistics {
+  getTemplate() {
+    return (`<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -43,8 +46,18 @@ const createStatistics = () => {
     <div class="statistic__chart-wrap">
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
-
   </section>`);
-};
+  }
 
-export {createStatistics};
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

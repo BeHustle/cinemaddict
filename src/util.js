@@ -1,13 +1,12 @@
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-const generateObjectsArray = (cb, count) => {
-  const array = [];
-  for (let i = 0; i < count; i++) {
-    array.push(cb());
+const render = (container, component, place = `beforeend`) => {
+  switch (place) {
+    case `afterbegin`:
+      container.prepend(component.getElement());
+      break;
+    case `beforeend`:
+      container.append(component.getElement());
+      break;
   }
-  return array;
 };
 
 const getRandomNumber = (min, max, round = 1) => {
@@ -15,9 +14,18 @@ const getRandomNumber = (min, max, round = 1) => {
   return Math.round((rand) * round) / round;
 };
 
-const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
 
-const shuffleArray = function (array) {
+  return newElement.firstChild;
+};
+
+const getRandomArrayElement = (array) => {
+  return array[Math.floor(Math.random() * array.length)];
+};
+
+const shuffleArray = (array) => {
   let currentIndex = array.length;
   let temporaryValue;
   let randomIndex;
@@ -41,7 +49,9 @@ const getMonthName = (dateObject) => {
   return monthNames[dateObject.getMonth()];
 };
 
-const getRandomBoolean = () => getRandomArrayElement([true, false]);
+const getRandomBoolean = () => {
+  return getRandomArrayElement([true, false]);
+};
 
 const getFormatDuration = (duration) => {
   const hours = Math.floor(duration / 60);
@@ -55,12 +65,12 @@ const getCommentFormatDate = (date) => {
 
 export {
   render,
-  generateObjectsArray,
   getRandomNumber,
-  getRandomBoolean,
+  createElement,
   getRandomArrayElement,
-  getMonthName,
   shuffleArray,
+  getMonthName,
+  getRandomBoolean,
   getFormatDuration,
   getCommentFormatDate
 };

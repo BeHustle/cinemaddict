@@ -1,8 +1,12 @@
-import {getRandomNumber, getRandomArrayElement, shuffleArray, getRandomBoolean} from './util';
+import {
+  getRandomArrayElement,
+  shuffleArray,
+  getRandomBoolean,
+  getRandomNumber
+} from "./util";
 
 const YEAR_IN_MS = 1000 * 60 * 60 * 24 * 365;
 const now = new Date();
-
 const filmsData = {
   titles: [
     `The Dance of Life`,
@@ -58,7 +62,6 @@ const filmsData = {
   possibleDescriptionLength: [1, 5],
   possibleCountries: [1, 3],
 };
-
 const commentData = {
   authors: [`Erich von Stroheim`, `Mary Beth Hughes`, `Dan Duryea`, `Samuel Jackson`, `Christian Bale`, `Alan Rickman`],
   texts: [
@@ -89,52 +92,31 @@ const getRandomComment = () => {
 };
 
 const getRandomFilm = () => {
-  const {
-    titles,
-    originalTitles,
-    posters,
-    genresData,
-    descriptions,
-    directors,
-    writersData,
-    actorsData,
-    countriesData,
-    ageRatings,
-    possibleWriters,
-    possibleActors,
-    possibleGenres,
-    possibleRating,
-    possibleDates,
-    possibleDurations,
-    possibleComments,
-    possibleDescriptionLength,
-    possibleCountries,
-  } = filmsData;
-  const title = getRandomArrayElement(titles);
-  const originalTitle = getRandomArrayElement(originalTitles);
-  const poster = getRandomArrayElement(posters);
-  const genres = shuffleArray(genresData)
-    .slice(0, getRandomNumber(...possibleGenres));
-  const description = shuffleArray(descriptions)
-    .slice(0, getRandomNumber(...possibleDescriptionLength))
+  const title = getRandomArrayElement(filmsData.titles);
+  const originalTitle = getRandomArrayElement(filmsData.originalTitles);
+  const poster = getRandomArrayElement(filmsData.posters);
+  const genres = shuffleArray(filmsData.genresData)
+    .slice(0, getRandomNumber(...filmsData.possibleGenres));
+  const description = shuffleArray(filmsData.descriptions)
+    .slice(0, getRandomNumber(...filmsData.possibleDescriptionLength))
     .join(`. `);
-  const director = getRandomArrayElement(directors);
-  const writers = shuffleArray(writersData)
-    .slice(0, getRandomNumber(...possibleWriters));
-  const actors = shuffleArray(actorsData)
-    .slice(0, getRandomNumber(...possibleActors));
-  const countries = shuffleArray(countriesData)
-    .slice(0, getRandomNumber(...possibleCountries));
-  const ageRating = getRandomArrayElement(ageRatings);
-  const rating = getRandomNumber(...possibleRating, 10);
-  const date = new Date(getRandomNumber(...possibleDates));
-  const duration = getRandomNumber(...possibleDurations);
+  const director = getRandomArrayElement(filmsData.directors);
+  const writers = shuffleArray(filmsData.writersData)
+    .slice(0, getRandomNumber(...filmsData.possibleWriters));
+  const actors = shuffleArray(filmsData.actorsData)
+    .slice(0, getRandomNumber(...filmsData.possibleActors));
+  const countries = shuffleArray(filmsData.countriesData)
+    .slice(0, getRandomNumber(...filmsData.possibleCountries));
+  const ageRating = getRandomArrayElement(filmsData.ageRatings);
+  const rating = getRandomNumber(...filmsData.possibleRating, 10);
+  const date = new Date(getRandomNumber(...filmsData.possibleDates));
+  const duration = getRandomNumber(...filmsData.possibleDurations);
   const isFavorite = getRandomBoolean();
   const isWatched = getRandomBoolean();
   const inWatchlist = getRandomBoolean();
 
   const comments = [];
-  for (let i = 0; i < getRandomNumber(...possibleComments); i++) {
+  for (let i = 0; i < getRandomNumber(...filmsData.possibleComments); i++) {
     comments.push(getRandomComment());
   }
 
@@ -159,4 +141,12 @@ const getRandomFilm = () => {
   };
 };
 
-export {getRandomFilm};
+const getRandomFilms = (count) => {
+  const array = [];
+  for (let i = 0; i < count; i++) {
+    array.push(getRandomFilm());
+  }
+  return array;
+};
+
+export {getRandomFilms};
