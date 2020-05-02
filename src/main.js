@@ -76,4 +76,3 @@ showMoreButton.addEventListener(`click`, (evt) => {
     showMoreButton.remove();
   }
 });
-

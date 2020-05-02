@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import AbstractComponent from './abstract-component';
 
-export default class MostCommentedFilmsSection {
+export default class MostCommentedFilmsSection extends AbstractComponent {
   getTemplate() {
     return (`<section class="films-list--extra">
       <h2 class="films-list__title">Most commented</h2>
@@ -8,17 +8,5 @@ export default class MostCommentedFilmsSection {
       <div class="films-list__container" id="most-commented">
       </div>
     </section>`);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
