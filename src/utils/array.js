@@ -1,7 +1,3 @@
-const getRandomArrayElement = (array) => {
-  return array[Math.floor(Math.random() * array.length)];
-};
-
 const shuffleArray = (array) => {
   let currentIndex = array.length;
   let temporaryValue;
@@ -18,4 +14,4 @@ const shuffleArray = (array) => {
   return array;
 };
 
-export {getRandomArrayElement, shuffleArray};
+export {shuffleArray};
