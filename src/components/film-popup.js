@@ -182,11 +182,4 @@ export default class FilmPopup extends AbstractComponent {
       .querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, cb);
   }
-
-  removeCloseBtnListener(cb) {
-    this
-      .getElement()
-      .querySelector(`.film-details__close-btn`)
-      .removeEventListener(`click`, cb);
-  }
 }

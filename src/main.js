@@ -42,16 +42,12 @@ render(filmsSectionElement, new TopRatedFilmsSection());
 
 const topRatedSection = filmsSectionElement.querySelector(`#top-rated`);
 const mostCommentedSection = filmsSectionElement.querySelector(`#most-commented`);
-const showMoreButton = document.querySelector(`.films-list__show-more`);
 
 const createFilm = (film, container) => {
   const filmCard = new FilmCard(film);
   const filmPopup = new FilmPopup(film);
   const renderFilmPopup = () => render(bodyElement, filmPopup);
-  const deleteFilmPopup = () => {
-    filmPopup.removeCloseBtnListener(deleteFilmPopup);
-    filmPopup.getElement().remove();
-  };
+  const deleteFilmPopup = () => filmPopup.getElement().remove();
   const createFilmPopup = () => {
     renderFilmPopup();
     filmPopup.onClosePopup(deleteFilmPopup);
@@ -67,12 +63,14 @@ mostCommentedFilms.forEach((film) => createFilm(film, mostCommentedSection));
 
 render(mainElement, statistics);
 
-showMoreButton.addEventListener(`click`, (evt) => {
+const showMoreFilms = (evt) => {
   const prevFilmsCount = showingFilmsCount;
   showingFilmsCount += MAIN_FILMS_COUNT_BY_BUTTON;
   evt.preventDefault();
   mainFilms.slice(prevFilmsCount, showingFilmsCount).forEach((film) => createFilm(film, filmsContainerElement));
   if (showingFilmsCount >= mainFilms.length) {
-    showMoreButton.remove();
+    moreButton.getElement().remove();
   }
-});
+};
+
+moreButton.onClick(showMoreFilms);
