@@ -1,12 +1,13 @@
 import {
   getCommentFormatDate,
   getMonthName,
-  getFormatDuration,
-  createElement
-} from "../util";
+  getFormatDuration
+} from '../utils/date-time';
+import AbstractComponent from './abstract-component';
 
-export default class FilmPopup {
+export default class FilmPopup extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
   }
 
@@ -175,29 +176,10 @@ export default class FilmPopup {
 </section>`);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
   onClosePopup(cb) {
     this
       .getElement()
       .querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, cb);
-  }
-
-  removeCloseBtnListener(cb) {
-    this
-      .getElement()
-      .querySelector(`.film-details__close-btn`)
-      .removeEventListener(`click`, cb);
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import AbstractComponent from './abstract-component';
 
-export default class Statistics {
+export default class Statistics extends AbstractComponent {
   getTemplate() {
     return (`<section class="statistic">
     <p class="statistic__rank">
@@ -47,17 +47,5 @@ export default class Statistics {
       <canvas class="statistic__chart" width="1000"></canvas>
     </div>
   </section>`);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

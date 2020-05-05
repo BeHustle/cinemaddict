@@ -1,6 +1,6 @@
-import {createElement} from "../util";
+import AbstractComponent from './abstract-component';
 
-export default class TopRatedFilmsSection {
+export default class TopRatedFilmsSection extends AbstractComponent {
   getTemplate() {
     return (`<section class="films-list--extra">
       <h2 class="films-list__title">Top rated</h2>
@@ -10,15 +10,7 @@ export default class TopRatedFilmsSection {
     </section>`);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  getFilmsListContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
   }
 }

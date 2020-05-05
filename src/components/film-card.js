@@ -1,12 +1,11 @@
-import {
-  createElement,
-  getFormatDuration
-} from "../util";
+import {getFormatDuration} from "../utils/date-time";
+import AbstractComponent from './abstract-component';
 
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
   }
 
@@ -43,14 +42,6 @@ export default class FilmCard {
         </article>`);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
   onShowPopup(cb) {
     this
       .getElement()
@@ -66,9 +57,5 @@ export default class FilmCard {
       .getElement()
       .querySelector(`.film-card__comments`)
       .addEventListener(`click`, cb);
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
