@@ -2,9 +2,8 @@ import {render} from "../utils/render";
 import MostCommentedFilmsSection from "../components/most-commented-films-section";
 import TopRatedFilmsSection from "../components/top-rated-films-section";
 import MainFilmsSection from "../components/main-films-section";
-import FilmPopup from "../components/film-popup";
-import FilmCard from "../components/film-card";
 import MoreButton from "../components/more-button";
+import MovieController from "./movie-controller";
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
@@ -12,7 +11,6 @@ import {
   TOP_RATED_FILMS_COUNT,
 } from "../constants";
 
-const bodyElement = document.querySelector(`body`);
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 const moreButton = new MoreButton();
 const mainFilmsSection = new MainFilmsSection();
@@ -24,36 +22,28 @@ export default class PageController {
     this._container = container;
   }
 
-  _createFilm(film, container) {
-    const filmCard = new FilmCard(film);
-    const filmPopup = new FilmPopup(film);
-    const renderFilmPopup = () => render(bodyElement, filmPopup);
-    const deleteFilmPopup = () => filmPopup.getElement().remove();
-    const createFilmPopup = () => {
-      renderFilmPopup();
-      filmPopup.onClosePopup(deleteFilmPopup);
-    };
-
-    filmCard.onShowPopup(createFilmPopup);
-    render(container, filmCard);
+  _renderFilms(films, container, from = 0, to = films.length) {
+    const movieController = new MovieController(container, this._onDataChange);
+    films.slice(from, to).forEach((film) => movieController.render(film));
   }
 
-  _renderFilms(films, container, from = 0, to = films.length) {
-    films.slice(from, to).forEach((film) => this._createFilm(film, container));
+  _onDataChange(controller, film, newFilm) {
+    console.log(controller, film, newFilm);
   }
 
   render(films) {
-    const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
-    const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
+    this._topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
+    this._mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
+    this._mainFilms = films;
 
     render(this._container, mainFilmsSection);
     render(mainFilmsSection.getFilmsList(), moreButton);
     render(mainFilmsSection.getElement(), mostCommentedFilmsSection);
     render(mainFilmsSection.getElement(), topRatedFilmsSection);
 
-    this._renderFilms(films, mainFilmsSection.getFilmsListContainer(), 0, showingFilmsCount);
-    this._renderFilms(topRatedFilms, topRatedFilmsSection.getFilmsListContainer());
-    this._renderFilms(mostCommentedFilms, mostCommentedFilmsSection.getFilmsListContainer());
+    this._renderFilms(this._mainFilms, mainFilmsSection.getFilmsListContainer(), 0, showingFilmsCount);
+    this._renderFilms(this._topRatedFilms, topRatedFilmsSection.getFilmsListContainer());
+    this._renderFilms(this._mostCommentedFilms, mostCommentedFilmsSection.getFilmsListContainer());
 
     const showMoreFilms = (evt) => {
       const prevFilmsCount = showingFilmsCount;

@@ -42,20 +42,25 @@ export default class FilmCard extends AbstractComponent {
         </article>`);
   }
 
+  _addCbToClickOnElement(selector, cb) {
+    this.getElement().querySelector(selector).addEventListener(`click`, cb);
+  }
+
   onShowPopup(cb) {
-    this
-      .getElement()
-      .querySelector(`img`)
-      .addEventListener(`click`, cb);
+    this._addCbToClickOnElement(`img`, cb);
+    this._addCbToClickOnElement(`.film-card__title`, cb);
+    this._addCbToClickOnElement(`.film-card__comments`, cb);
+  }
 
-    this
-      .getElement()
-      .querySelector(`.film-card__title`)
-      .addEventListener(`click`, cb);
+  onAddToWatchlist(cb) {
+    this._addCbToClickOnElement(`.film-card__controls-item--add-to-watchlist`, cb);
+  }
 
-    this
-      .getElement()
-      .querySelector(`.film-card__comments`)
-      .addEventListener(`click`, cb);
+  onMarkAsWatched(cb) {
+    this._addCbToClickOnElement(`.film-card__controls-item--mark-as-watched`, cb);
+  }
+
+  onMarkAsFavorite(cb) {
+    this._addCbToClickOnElement(`.film-card__controls-item--favorite`, cb);
   }
 }
