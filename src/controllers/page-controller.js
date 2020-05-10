@@ -20,6 +20,7 @@ const topRatedFilmsSection = new TopRatedFilmsSection();
 export default class PageController {
   constructor(container) {
     this._container = container;
+    this._onDataChange = this._onDataChange.bind(this);
   }
 
   _renderFilms(films, container, from = 0, to = films.length) {
@@ -28,7 +29,13 @@ export default class PageController {
   }
 
   _onDataChange(controller, film, newFilm) {
-    console.log(controller, film, newFilm);
+    const index = this._mainFilms.findIndex((it) => it === film);
+
+    if (index === -1) {
+      return;
+    }
+    this._mainFilms = [].concat(this._mainFilms.slice(0, index), newFilm, this._mainFilms.slice(index + 1));
+    controller.render(this._mainFilms[index]);
   }
 
   render(films) {
