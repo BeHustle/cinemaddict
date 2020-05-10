@@ -21,11 +21,20 @@ export default class PageController {
   constructor(container) {
     this._container = container;
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+    this._movieControllers = [];
   }
 
   _renderFilms(films, container, from = 0, to = films.length) {
-    const movieController = new MovieController(container, this._onDataChange);
-    films.slice(from, to).forEach((film) => movieController.render(film));
+    films.slice(from, to).forEach((film) => {
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
+      movieController.render(film);
+      this._movieControllers.push(movieController);
+    });
+  }
+
+  _onViewChange() {
+    this._movieControllers.forEach((controller) => controller.setDefaultView());
   }
 
   _onDataChange(controller, film, newFilm) {
