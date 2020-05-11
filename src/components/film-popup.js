@@ -9,20 +9,20 @@ import AbstractSmartComponent from './abstract-smart-component';
 export default class FilmPopup extends AbstractSmartComponent {
   constructor(film) {
     super();
-    this.film = film;
+    this._film = film;
     this._rerenderOnChangeEmoji();
   }
 
 
   changeFlags(newFilm) {
-    if (!(this.film.isFavorite === newFilm.isFavorite)) {
-      this.film.isFavorite = newFilm.isFavorite;
+    if (!(this._film.isFavorite === newFilm.isFavorite)) {
+      this._film.isFavorite = newFilm.isFavorite;
     }
-    if (!(this.film.isWatched === newFilm.isWatched)) {
-      this.film.isWatched = newFilm.isWatched;
+    if (!(this._film.isWatched === newFilm.isWatched)) {
+      this._film.isWatched = newFilm.isWatched;
     }
-    if (!(this.film.inWatchlist === newFilm.inWatchlist)) {
-      this.film.inWatchlist = newFilm.inWatchlist;
+    if (!(this._film.inWatchlist === newFilm.inWatchlist)) {
+      this._film.inWatchlist = newFilm.inWatchlist;
     }
   }
 
@@ -110,7 +110,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       title, originalTitle, rating, director, writers, poster,
       actors, date, duration, countries, genres, description,
       ageRating, isFavorite, isWatched, inWatchlist, comments,
-    } = this.film;
+    } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
     const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;

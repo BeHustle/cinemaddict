@@ -5,6 +5,10 @@ export default class AbstractSmartComponent extends AbstractComponent {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
   }
 
+  addCbToClickOnElement(selector, cb) {
+    this.getElement().querySelector(selector).addEventListener(`click`, cb);
+  }
+
   rerender() {
     const oldElement = this.getElement();
     const parent = oldElement.parentElement;

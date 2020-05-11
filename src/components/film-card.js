@@ -7,18 +7,18 @@ const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
-    this.film = film;
+    this._film = film;
   }
 
   changeFlags(newFilm) {
-    if (!(this.film.isFavorite === newFilm.isFavorite)) {
-      this.film.isFavorite = newFilm.isFavorite;
+    if (!(this._film.isFavorite === newFilm.isFavorite)) {
+      this._film.isFavorite = newFilm.isFavorite;
     }
-    if (!(this.film.isWatched === newFilm.isWatched)) {
-      this.film.isWatched = newFilm.isWatched;
+    if (!(this._film.isWatched === newFilm.isWatched)) {
+      this._film.isWatched = newFilm.isWatched;
     }
-    if (!(this.film.inWatchlist === newFilm.inWatchlist)) {
-      this.film.inWatchlist = newFilm.inWatchlist;
+    if (!(this._film.inWatchlist === newFilm.inWatchlist)) {
+      this._film.inWatchlist = newFilm.inWatchlist;
     }
   }
 
@@ -27,7 +27,7 @@ export default class FilmCard extends AbstractSmartComponent {
       title, rating, date, duration,
       genres, description, poster, comments,
       isFavorite, isWatched, inWatchlist,
-    } = this.film;
+    } = this._film;
     const filmYear = date.getFullYear();
     const filmDuration = getFormatDuration(duration);
     const filmGenre = genres.join(`, `);

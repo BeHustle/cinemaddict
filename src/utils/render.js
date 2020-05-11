@@ -16,8 +16,5 @@ const render = (container, component, place = `beforeend`) => {
   }
 };
 
-const addCbToClickOnElement = (component, selector, cb) => {
-  component.getElement().querySelector(selector).addEventListener(`click`, cb);
-};
 
-export {createElement, render, addCbToClickOnElement};
+export {createElement, render};
