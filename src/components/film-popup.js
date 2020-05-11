@@ -193,22 +193,22 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   onClosePopup(cb) {
-    addCbToClickOnElement(this, `.film-details__close-btn`, cb);
+    this.addCbToClickOnElement(`.film-details__close-btn`, cb);
     this._closeCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
-    addCbToClickOnElement(this, `#watchlist`, cb);
+    this.addCbToClickOnElement(`#watchlist`, cb);
     this._watchlistCallBack = cb;
   }
 
   onMarkAsWatched(cb) {
-    addCbToClickOnElement(this, `#watched`, cb);
+    this.addCbToClickOnElement(`#watched`, cb);
     this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
-    addCbToClickOnElement(this, `#favorite`, cb);
+    this.addCbToClickOnElement(`#favorite`, cb);
     this._favoriteCallBack = cb;
   }
 
