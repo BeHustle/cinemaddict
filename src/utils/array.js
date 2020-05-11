@@ -14,8 +14,8 @@ const shuffleArray = (array) => {
   return array;
 };
 
-const pushAfterIndex = (array, element, index) => {
+const changeArrayElement = (array, element, index) => {
   return [].concat(array.slice(0, index), element, array.slice(index + 1));
 };
 
-export {shuffleArray, pushAfterIndex};
+export {shuffleArray, changeArrayElement};

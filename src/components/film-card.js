@@ -1,19 +1,25 @@
-import {getFormatDuration} from "../utils/date-time";
-import AbstractSmartComponent from "./abstract-smart-component";
+import {getFormatDuration} from '../utils/date-time';
+import {addCbToClickOnElement} from '../utils/render';
+import AbstractSmartComponent from './abstract-smart-component';
+
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 
 export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
-    this._film = film;
+    this.film = film;
   }
 
-  set film(film) {
-    this._film = film;
-  }
-
-  get film() {
-    return this._film;
+  changeFlags(newFilm) {
+    if (!(this.film.isFavorite === newFilm.isFavorite)) {
+      this.film.isFavorite = newFilm.isFavorite;
+    }
+    if (!(this.film.isWatched === newFilm.isWatched)) {
+      this.film.isWatched = newFilm.isWatched;
+    }
+    if (!(this.film.inWatchlist === newFilm.inWatchlist)) {
+      this.film.inWatchlist = newFilm.inWatchlist;
+    }
   }
 
   getTemplate() {
@@ -21,7 +27,7 @@ export default class FilmCard extends AbstractSmartComponent {
       title, rating, date, duration,
       genres, description, poster, comments,
       isFavorite, isWatched, inWatchlist,
-    } = this._film;
+    } = this.film;
     const filmYear = date.getFullYear();
     const filmDuration = getFormatDuration(duration);
     const filmGenre = genres.join(`, `);
@@ -50,24 +56,24 @@ export default class FilmCard extends AbstractSmartComponent {
   }
 
   onShowPopup(cb) {
-    this._addCbToClickOnElement(`img`, cb);
-    this._addCbToClickOnElement(`.film-card__title`, cb);
-    this._addCbToClickOnElement(`.film-card__comments`, cb);
+    addCbToClickOnElement(this, `img`, cb);
+    addCbToClickOnElement(this, `.film-card__title`, cb);
+    addCbToClickOnElement(this, `.film-card__comments`, cb);
     this._showPopupCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
-    this._addCbToClickOnElement(`.film-card__controls-item--add-to-watchlist`, cb);
+    addCbToClickOnElement(this, `.film-card__controls-item--add-to-watchlist`, cb);
     this._watchlistCallback = cb;
   }
 
   onMarkAsWatched(cb) {
-    this._addCbToClickOnElement(`.film-card__controls-item--mark-as-watched`, cb);
+    addCbToClickOnElement(this, `.film-card__controls-item--mark-as-watched`, cb);
     this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
-    this._addCbToClickOnElement(`.film-card__controls-item--favorite`, cb);
+    addCbToClickOnElement(this, `.film-card__controls-item--favorite`, cb);
     this._favoriteCallBack = cb;
   }
 

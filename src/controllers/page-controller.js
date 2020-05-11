@@ -1,16 +1,16 @@
-import {render} from "../utils/render";
-import {pushAfterIndex} from "../utils/array";
-import MostCommentedFilmsSection from "../components/most-commented-films-section";
-import TopRatedFilmsSection from "../components/top-rated-films-section";
-import MainFilmsSection from "../components/main-films-section";
-import MoreButton from "../components/more-button";
-import MovieController from "./movie-controller";
+import {render} from '../utils/render';
+import {changeArrayElement} from '../utils/array';
+import MostCommentedFilmsSection from '../components/most-commented-films-section';
+import TopRatedFilmsSection from '../components/top-rated-films-section';
+import MainFilmsSection from '../components/main-films-section';
+import MoreButton from '../components/more-button';
+import MovieController from './movie-controller';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
   MOST_COMMENTED_FILMS_COUNT,
   TOP_RATED_FILMS_COUNT,
-} from "../constants";
+} from '../constants';
 
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 const moreButton = new MoreButton();
@@ -44,7 +44,7 @@ export default class PageController {
     if (index === -1) {
       return;
     }
-    this.films = pushAfterIndex(this.films, newFilm, index);
+    this.films = changeArrayElement(this.films, newFilm, index);
     controller.render(this.films[index]);
   }
 

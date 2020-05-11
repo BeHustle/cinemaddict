@@ -1,12 +1,8 @@
-import AbstractComponent from "./abstract-component";
+import AbstractComponent from './abstract-component';
 
 export default class AbstractSmartComponent extends AbstractComponent {
   recoveryListeners() {
     throw new Error(`Abstract method not implemented: recoveryListeners`);
-  }
-
-  _addCbToClickOnElement(selector, cb) {
-    this.getElement().querySelector(selector).addEventListener(`click`, cb);
   }
 
   rerender() {
@@ -17,7 +13,9 @@ export default class AbstractSmartComponent extends AbstractComponent {
 
     const newElement = this.getElement();
 
-    parent.replaceChild(newElement, oldElement);
+    if (parent) {
+      parent.replaceChild(newElement, oldElement);
+    }
 
     this.recoveryListeners();
   }

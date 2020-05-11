@@ -3,21 +3,27 @@ import {
   getMonthName,
   getFormatDuration
 } from '../utils/date-time';
-import AbstractSmartComponent from "./abstract-smart-component";
+import {addCbToClickOnElement} from '../utils/render';
+import AbstractSmartComponent from './abstract-smart-component';
 
 export default class FilmPopup extends AbstractSmartComponent {
   constructor(film) {
     super();
-    this._film = film;
+    this.film = film;
     this._rerenderOnChangeEmoji();
   }
 
-  set film(film) {
-    this._film = film;
-  }
 
-  get film() {
-    return this._film;
+  changeFlags(newFilm) {
+    if (!(this.film.isFavorite === newFilm.isFavorite)) {
+      this.film.isFavorite = newFilm.isFavorite;
+    }
+    if (!(this.film.isWatched === newFilm.isWatched)) {
+      this.film.isWatched = newFilm.isWatched;
+    }
+    if (!(this.film.inWatchlist === newFilm.inWatchlist)) {
+      this.film.inWatchlist = newFilm.inWatchlist;
+    }
   }
 
   _createFilmGenres(genres) {
@@ -104,7 +110,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       title, originalTitle, rating, director, writers, poster,
       actors, date, duration, countries, genres, description,
       ageRating, isFavorite, isWatched, inWatchlist, comments,
-    } = this._film;
+    } = this.film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
     const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
@@ -187,22 +193,22 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   onClosePopup(cb) {
-    this._addCbToClickOnElement(`.film-details__close-btn`, cb);
+    addCbToClickOnElement(this, `.film-details__close-btn`, cb);
     this._closeCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
-    this._addCbToClickOnElement(`#watchlist`, cb);
+    addCbToClickOnElement(this, `#watchlist`, cb);
     this._watchlistCallBack = cb;
   }
 
   onMarkAsWatched(cb) {
-    this._addCbToClickOnElement(`#watched`, cb);
+    addCbToClickOnElement(this, `#watched`, cb);
     this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
-    this._addCbToClickOnElement(`#favorite`, cb);
+    addCbToClickOnElement(this, `#favorite`, cb);
     this._favoriteCallBack = cb;
   }
 
@@ -220,8 +226,11 @@ export default class FilmPopup extends AbstractSmartComponent {
       .querySelector(`label[for="${evt.currentTarget.id}"]`)
       .querySelector(`img`)
       .src;
-    this.rerender();
-    this.getElement().querySelector(`#${evt.currentTarget.id}`).checked = true;
+    this
+      .getElement()
+      .querySelector(`.film-details__add-emoji-label`)
+      .innerHTML = `<img src="${this._emojiImg}" width="60" height="60">`;
+    evt.currentTarget.checked = true;
   }
 
   _rerenderOnChangeEmoji() {
