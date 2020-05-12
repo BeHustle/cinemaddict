@@ -3,12 +3,13 @@ import {
   getMonthName,
   getFormatDuration
 } from '../utils/date-time';
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component';
 
-export default class FilmPopup extends AbstractComponent {
+export default class FilmPopup extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._rerenderOnChangeEmoji();
   }
 
   _createFilmGenres(genres) {
@@ -58,7 +59,7 @@ export default class FilmPopup extends AbstractComponent {
         </ul>
 
         <div class="film-details__new-comment">
-          <div for="add-emoji" class="film-details__add-emoji-label"></div>
+          <label for="add-emoji" class="film-details__add-emoji-label"></label>
 
           <label class="film-details__comment-label">
             <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -177,9 +178,51 @@ export default class FilmPopup extends AbstractComponent {
   }
 
   onClosePopup(cb) {
+    this.addCbToClickOnElement(`.film-details__close-btn`, cb);
+    this._closeCallBack = cb;
+  }
+
+  onAddToWatchlist(cb) {
+    this.addCbToClickOnElement(`#watchlist`, cb);
+    this._watchlistCallBack = cb;
+  }
+
+  onMarkAsWatched(cb) {
+    this.addCbToClickOnElement(`#watched`, cb);
+    this._watchedCallBack = cb;
+  }
+
+  onMarkAsFavorite(cb) {
+    this.addCbToClickOnElement(`#favorite`, cb);
+    this._favoriteCallBack = cb;
+  }
+
+  recoveryListeners() {
+    this.onClosePopup(this._closeCallBack);
+    this.onAddToWatchlist(this._watchlistCallBack);
+    this.onMarkAsWatched(this._watchedCallBack);
+    this.onMarkAsFavorite(this._favoriteCallBack);
+    this._rerenderOnChangeEmoji();
+  }
+
+  _onEmojiChange(evt) {
+    const emojiImg = this
+      .getElement()
+      .querySelector(`label[for="${evt.currentTarget.id}"]`)
+      .querySelector(`img`)
+      .src;
     this
       .getElement()
-      .querySelector(`.film-details__close-btn`)
-      .addEventListener(`click`, cb);
+      .querySelector(`.film-details__add-emoji-label`)
+      .innerHTML = `<img src="${emojiImg}" width="60" height="60">`;
+  }
+
+  _rerenderOnChangeEmoji() {
+    this
+      .getElement()
+      .querySelectorAll(`.film-details__emoji-item`)
+      .forEach((item) => {
+        item.addEventListener(`change`, this._onEmojiChange.bind(this));
+      });
   }
 }

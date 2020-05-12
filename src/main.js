@@ -1,11 +1,11 @@
 import {MAIN_FILMS_COUNT} from './constants';
-import {render} from "./utils/render";
-import PageController from "./controllers/page-controller";
-import Statistics from "./components/statistics";
-import UserProfile from "./components/user-profile";
-import Sort from "./components/sort";
-import Filter from "./components/filter";
-import {getRandomFilms} from "./films-data";
+import {render} from './utils/render';
+import PageController from './controllers/page-controller';
+import Statistics from './components/statistics';
+import UserProfile from './components/user-profile';
+import Sort from './components/sort';
+import Filter from './components/filter';
+import {getRandomFilms} from './films-data';
 
 const sort = new Sort();
 const userProfile = new UserProfile();
