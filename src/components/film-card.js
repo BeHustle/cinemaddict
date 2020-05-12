@@ -1,5 +1,4 @@
 import {getFormatDuration} from '../utils/date-time';
-import {addCbToClickOnElement} from '../utils/render';
 import AbstractSmartComponent from './abstract-smart-component';
 
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
@@ -8,18 +7,6 @@ export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
-  }
-
-  changeFlags(newFilm) {
-    if (!(this._film.isFavorite === newFilm.isFavorite)) {
-      this._film.isFavorite = newFilm.isFavorite;
-    }
-    if (!(this._film.isWatched === newFilm.isWatched)) {
-      this._film.isWatched = newFilm.isWatched;
-    }
-    if (!(this._film.inWatchlist === newFilm.inWatchlist)) {
-      this._film.inWatchlist = newFilm.inWatchlist;
-    }
   }
 
   getTemplate() {

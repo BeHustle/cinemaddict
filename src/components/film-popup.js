@@ -3,7 +3,6 @@ import {
   getMonthName,
   getFormatDuration
 } from '../utils/date-time';
-import {addCbToClickOnElement} from '../utils/render';
 import AbstractSmartComponent from './abstract-smart-component';
 
 export default class FilmPopup extends AbstractSmartComponent {
@@ -11,19 +10,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     super();
     this._film = film;
     this._rerenderOnChangeEmoji();
-  }
-
-
-  changeFlags(newFilm) {
-    if (!(this._film.isFavorite === newFilm.isFavorite)) {
-      this._film.isFavorite = newFilm.isFavorite;
-    }
-    if (!(this._film.isWatched === newFilm.isWatched)) {
-      this._film.isWatched = newFilm.isWatched;
-    }
-    if (!(this._film.inWatchlist === newFilm.inWatchlist)) {
-      this._film.inWatchlist = newFilm.inWatchlist;
-    }
   }
 
   _createFilmGenres(genres) {
@@ -49,7 +35,6 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _createFilmComments(comments) {
-    const selectedEmojiImg = this._emojiImg ? `<img src="${this._emojiImg}" width="60" height="60">` : ``;
     const commentsTemplate = comments ? comments.reduce((acc, cv) => {
       const {author, text, emoji, date} = cv;
       return acc + `<li class="film-details__comment">
@@ -74,7 +59,7 @@ export default class FilmPopup extends AbstractSmartComponent {
         </ul>
 
         <div class="film-details__new-comment">
-          <label for="add-emoji" class="film-details__add-emoji-label">${selectedEmojiImg}</label>
+          <label for="add-emoji" class="film-details__add-emoji-label"></label>
 
           <label class="film-details__comment-label">
             <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -221,7 +206,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _onEmojiChange(evt) {
-    this._emojiImg = this
+    const emojiImg = this
       .getElement()
       .querySelector(`label[for="${evt.currentTarget.id}"]`)
       .querySelector(`img`)
@@ -229,8 +214,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     this
       .getElement()
       .querySelector(`.film-details__add-emoji-label`)
-      .innerHTML = `<img src="${this._emojiImg}" width="60" height="60">`;
-    evt.currentTarget.checked = true;
+      .innerHTML = `<img src="${emojiImg}" width="60" height="60">`;
   }
 
   _rerenderOnChangeEmoji() {
