@@ -16,7 +16,7 @@ export default class MovieController {
     this._onDataChange(this, film, newFilm);
   }
 
-  _setDataChangeHandlersOnCard(film, component) {
+  _setDataChangeHandlers(film, component) {
     component.onAddToWatchlist((evt) => {
       this._changeFlag(film, `inWatchlist`);
       evt.preventDefault();
@@ -28,18 +28,6 @@ export default class MovieController {
     component.onMarkAsFavorite((evt) => {
       this._changeFlag(film, `isFavorite`);
       evt.preventDefault();
-    });
-  }
-
-  _setDataChangeHandlersOnPopup(film, component) {
-    component.onAddToWatchlist(() => {
-      this._changeFlag(film, `inWatchlist`);
-    });
-    component.onMarkAsWatched(() => {
-      this._changeFlag(film, `isWatched`);
-    });
-    component.onMarkAsFavorite(() => {
-      this._changeFlag(film, `isFavorite`);
     });
   }
 
@@ -61,23 +49,29 @@ export default class MovieController {
       this._onViewChange();
       this.renderFilmPopup();
       this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
-      this._setDataChangeHandlersOnPopup(film, this._filmPopup);
+      this._setDataChangeHandlers(film, this._filmPopup);
       this._isPopupOpened = true;
     };
 
     if (this._filmCard && this._filmPopup) {
       const oldFilmCard = this._filmCard;
+      const oldFilmPopup = this._filmPopup;
       this._filmCard = new FilmCard(film);
-      if (!this._isPopupOpened) {
-        this._filmPopup = new FilmPopup(film);
-      }
-      this._setDataChangeHandlersOnCard(film, this._filmCard);
-      this._filmCard.onShowPopup(createFilmPopup);
+      this._filmPopup = new FilmPopup(film);
+
       replace(this._filmCard, oldFilmCard);
+      this._filmCard.onShowPopup(createFilmPopup);
+      this._setDataChangeHandlers(film, this._filmCard);
+
+      replace(this._filmPopup, oldFilmPopup);
+      if (this._isPopupOpened) {
+        this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
+        this._setDataChangeHandlers(film, this._filmPopup);
+      }
     } else {
       this._filmCard = new FilmCard(film);
       this._filmPopup = new FilmPopup(film);
-      this._setDataChangeHandlersOnCard(film, this._filmCard);
+      this._setDataChangeHandlers(film, this._filmCard);
       this._filmCard.onShowPopup(createFilmPopup);
       render(this._container, this._filmCard);
     }
