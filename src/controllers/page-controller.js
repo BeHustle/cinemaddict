@@ -14,7 +14,6 @@ import {
 
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 const moreButton = new MoreButton();
-const mainFilmsSection = new MainFilmsSection();
 const mostCommentedFilmsSection = new MostCommentedFilmsSection();
 const topRatedFilmsSection = new TopRatedFilmsSection();
 
@@ -49,31 +48,37 @@ export default class PageController {
   }
 
   render(films) {
-    this.films = films;
-    const topRatedFilms = this.films.slice(0, TOP_RATED_FILMS_COUNT);
-    const mostCommentedFilms = this.films.slice(0, MOST_COMMENTED_FILMS_COUNT);
-    const mainFilms = this.films.slice(0, showingFilmsCount);
+    if (films) {
+      this.films = films;
+      const mainFilmsSection = new MainFilmsSection();
+      const topRatedFilms = this.films.slice(0, TOP_RATED_FILMS_COUNT);
+      const mostCommentedFilms = this.films.slice(0, MOST_COMMENTED_FILMS_COUNT);
+      const mainFilms = this.films.slice(0, showingFilmsCount);
 
-    render(this._container, mainFilmsSection);
-    render(mainFilmsSection.getFilmsList(), moreButton);
-    render(mainFilmsSection.getElement(), mostCommentedFilmsSection);
-    render(mainFilmsSection.getElement(), topRatedFilmsSection);
+      render(this._container, mainFilmsSection);
+      render(mainFilmsSection.getFilmsList(), moreButton);
+      render(mainFilmsSection.getElement(), mostCommentedFilmsSection);
+      render(mainFilmsSection.getElement(), topRatedFilmsSection);
 
-    this._renderFilms(mainFilms, mainFilmsSection.getFilmsListContainer());
-    this._renderFilms(topRatedFilms, topRatedFilmsSection.getFilmsListContainer());
-    this._renderFilms(mostCommentedFilms, mostCommentedFilmsSection.getFilmsListContainer());
+      this._renderFilms(mainFilms, mainFilmsSection.getFilmsListContainer());
+      this._renderFilms(topRatedFilms, topRatedFilmsSection.getFilmsListContainer());
+      this._renderFilms(mostCommentedFilms, mostCommentedFilmsSection.getFilmsListContainer());
 
-    const showMoreFilms = (evt) => {
-      const prevFilmsCount = showingFilmsCount;
-      showingFilmsCount += MAIN_FILMS_COUNT_BY_BUTTON;
-      const currentFilms = this.films.slice(prevFilmsCount, showingFilmsCount);
-      evt.preventDefault();
-      this._renderFilms(currentFilms, mainFilmsSection.getFilmsListContainer());
-      if (showingFilmsCount >= films.length) {
-        moreButton.getElement().remove();
-      }
-    };
+      const showMoreFilms = (evt) => {
+        const prevFilmsCount = showingFilmsCount;
+        showingFilmsCount += MAIN_FILMS_COUNT_BY_BUTTON;
+        const currentFilms = this.films.slice(prevFilmsCount, showingFilmsCount);
+        evt.preventDefault();
+        this._renderFilms(currentFilms, mainFilmsSection.getFilmsListContainer());
+        if (showingFilmsCount >= films.length) {
+          moreButton.getElement().remove();
+        }
+      };
 
-    moreButton.onClick(showMoreFilms);
+      moreButton.onClick(showMoreFilms);
+    } else {
+      const mainFilmsSection = new MainFilmsSection(`no-data`);
+      render(this._container, mainFilmsSection);
+    }
   }
 }
