@@ -1,5 +1,4 @@
-import {render} from '../utils/render';
-import {changeArrayElement} from '../utils/array';
+import {render, replace} from '../utils/render';
 import MostCommentedFilmsSection from '../components/most-commented-films-section';
 import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
@@ -13,14 +12,12 @@ import {
 } from '../constants';
 
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
-const moreButton = new MoreButton();
-const mainFilmsSection = new MainFilmsSection();
-const mostCommentedFilmsSection = new MostCommentedFilmsSection();
-const topRatedFilmsSection = new TopRatedFilmsSection();
 
 export default class PageController {
-  constructor(container) {
+  constructor(model, container) {
     this._container = container;
+    this._model = model;
+    this._model.addObserver(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];
@@ -39,41 +36,49 @@ export default class PageController {
   }
 
   _onDataChange(controller, film, newFilm) {
-    const index = this.films.findIndex((it) => it === film);
-
-    if (index === -1) {
-      return;
-    }
-    this.films = changeArrayElement(this.films, newFilm, index);
-    controller.render(this.films[index]);
+    this._model.setMovie(film.id, newFilm);
+    controller.render(this._model.getMovie(newFilm.id));
   }
 
-  render(films) {
-    this.films = films;
-    const topRatedFilms = this.films.slice(0, TOP_RATED_FILMS_COUNT);
-    const mostCommentedFilms = this.films.slice(0, MOST_COMMENTED_FILMS_COUNT);
-    const mainFilms = this.films.slice(0, showingFilmsCount);
+  render() {
+    if (this._mainFilmsSection) {
+      const oldFilmsSection = this._mainFilmsSection;
+      this._mainFilmsSection = new MainFilmsSection();
+      replace(this._mainFilmsSection, oldFilmsSection);
+    } else {
+      this._mainFilmsSection = new MainFilmsSection();
+      render(this._container, this._mainFilmsSection);
+    }
 
-    render(this._container, mainFilmsSection);
-    render(mainFilmsSection.getFilmsList(), moreButton);
-    render(mainFilmsSection.getElement(), mostCommentedFilmsSection);
-    render(mainFilmsSection.getElement(), topRatedFilmsSection);
+    this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
+    this._topRatedFilmsSection = new TopRatedFilmsSection();
+    this._moreButton = new MoreButton();
+    const films = this._model.getMovies();
+    const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
+    const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
+    const mainFilms = films.slice(0, showingFilmsCount);
 
-    this._renderFilms(mainFilms, mainFilmsSection.getFilmsListContainer());
-    this._renderFilms(topRatedFilms, topRatedFilmsSection.getFilmsListContainer());
-    this._renderFilms(mostCommentedFilms, mostCommentedFilmsSection.getFilmsListContainer());
+    if (films.length > showingFilmsCount) {
+      render(this._mainFilmsSection.getFilmsList(), this._moreButton);
+    }
+    render(this._mainFilmsSection.getElement(), this._mostCommentedFilmsSection);
+    render(this._mainFilmsSection.getElement(), this._topRatedFilmsSection);
+
+    this._renderFilms(mainFilms, this._mainFilmsSection.getFilmsListContainer());
+    this._renderFilms(topRatedFilms, this._topRatedFilmsSection.getFilmsListContainer());
+    this._renderFilms(mostCommentedFilms, this._mostCommentedFilmsSection.getFilmsListContainer());
 
     const showMoreFilms = (evt) => {
       const prevFilmsCount = showingFilmsCount;
       showingFilmsCount += MAIN_FILMS_COUNT_BY_BUTTON;
-      const currentFilms = this.films.slice(prevFilmsCount, showingFilmsCount);
+      const currentFilms = films.slice(prevFilmsCount, showingFilmsCount);
       evt.preventDefault();
-      this._renderFilms(currentFilms, mainFilmsSection.getFilmsListContainer());
+      this._renderFilms(currentFilms, this._mainFilmsSection.getFilmsListContainer());
       if (showingFilmsCount >= films.length) {
-        moreButton.getElement().remove();
+        this._moreButton.getElement().remove();
       }
     };
 
-    moreButton.onClick(showMoreFilms);
+    this._moreButton.onClick(showMoreFilms);
   }
 }

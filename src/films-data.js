@@ -88,6 +88,7 @@ const getRandomComment = () => {
 };
 
 const getRandomFilm = () => {
+  const id = getRandomNumber(1, 100000);
   const title = getRandomArrayElement(filmsData.titles);
   const originalTitle = getRandomArrayElement(filmsData.originalTitles);
   const poster = getRandomArrayElement(filmsData.posters);
@@ -117,6 +118,7 @@ const getRandomFilm = () => {
   }
 
   return {
+    id,
     title,
     originalTitle,
     poster,
