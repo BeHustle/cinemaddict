@@ -2,20 +2,20 @@ import {changeArrayElement} from '../utils/array';
 
 export default class Movies {
   constructor() {
-    this._observers = [];
+    this._filterObservers = [];
   }
 
   setFilter(filter) {
     this._activeFilter = filter;
-    this._observers.forEach((cb) => cb());
+    this._filterObservers.forEach((cb) => cb());
   }
 
   getFilter() {
     return this._activeFilter;
   }
 
-  addObserver(cb) {
-    this._observers.push(cb);
+  addObserverOnFilterChange(cb) {
+    this._filterObservers.push(cb);
   }
 
   getMovies() {

@@ -36,7 +36,7 @@ export default class FilmPopup extends AbstractSmartComponent {
 
   _createFilmComments(comments) {
     const commentsTemplate = comments ? comments.reduce((acc, cv) => {
-      const {author, text, emoji, date} = cv;
+      const {id, author, text, emoji, date} = cv;
       return acc + `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
@@ -46,7 +46,7 @@ export default class FilmPopup extends AbstractSmartComponent {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
                 <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-comment="${id}">Delete</button>
               </p>
             </div>
           </li>`;
@@ -196,6 +196,18 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.addCbToClickOnElement(`#favorite`, cb);
     this._favoriteCallBack = cb;
   }
+
+  /* onCommentDelete(cb) {
+    this
+      .getElement()
+      .querySelectorAll(`.film-details__comment-delete`)
+      .forEach((btn) => {
+        btn.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+          cb(evt.currentTarget.dataset.comment);
+        });
+      });
+  }*/
 
   recoveryListeners() {
     this.onClosePopup(this._closeCallBack);

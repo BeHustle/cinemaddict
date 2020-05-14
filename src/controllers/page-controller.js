@@ -17,7 +17,7 @@ export default class PageController {
   constructor(model, container) {
     this._container = container;
     this._model = model;
-    this._model.addObserver(this.render.bind(this));
+    this._model.addObserverOnFilterChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];

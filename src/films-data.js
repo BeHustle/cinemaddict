@@ -77,6 +77,7 @@ const commentData = {
 };
 
 const getRandomComment = () => {
+  const id = getRandomNumber(1, 100000);
   const {authors, possibleDates, possibleTextLength, emojis, texts} = commentData;
   const author = getRandomArrayElement(authors);
   const text = shuffleArray(texts)
@@ -84,7 +85,7 @@ const getRandomComment = () => {
     .join(`. `);
   const emoji = getRandomArrayElement(emojis);
   const date = new Date(getRandomNumber(...possibleDates));
-  return {author, text, emoji, date};
+  return {id, author, text, emoji, date};
 };
 
 const getRandomFilm = () => {

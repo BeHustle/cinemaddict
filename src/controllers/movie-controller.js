@@ -58,7 +58,6 @@ export default class MovieController {
       const oldFilmPopup = this._filmPopup;
       this._filmCard = new FilmCard(film);
       this._filmPopup = new FilmPopup(film);
-
       replace(this._filmCard, oldFilmCard);
       this._filmCard.onShowPopup(createFilmPopup);
       this._setDataChangeHandlers(film, this._filmCard);
