@@ -1,6 +1,7 @@
 import FilmCard from '../components/film-card';
 import FilmPopup from '../components/film-popup';
 import {render, replace} from '../utils/render';
+import {ESCAPE_KEY} from '../constants';
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
@@ -8,6 +9,7 @@ export default class MovieController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
   }
 
   _changeFlag(film, flag) {
@@ -31,6 +33,12 @@ export default class MovieController {
     });
   }
 
+  _closePopupOnEscape(evt) {
+    if (evt.key === ESCAPE_KEY) {
+      this.deleteFilmPopup();
+    }
+  }
+
   renderFilmPopup() {
     render(bodyElement, this._filmPopup);
   }
@@ -38,6 +46,7 @@ export default class MovieController {
   deleteFilmPopup() {
     this._filmPopup.getElement().remove();
     this._isPopupOpened = false;
+    document.removeEventListener(`keydown`, this._closePopupOnEscape);
   }
 
   setDefaultView() {
@@ -51,6 +60,7 @@ export default class MovieController {
       this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
       this._setDataChangeHandlers(film, this._filmPopup);
       this._isPopupOpened = true;
+      document.addEventListener(`keydown`, this._closePopupOnEscape);
     };
 
     if (this._filmCard && this._filmPopup) {
