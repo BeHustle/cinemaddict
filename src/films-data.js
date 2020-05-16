@@ -113,11 +113,6 @@ const getRandomFilm = () => {
   const isWatched = getRandomBoolean();
   const inWatchlist = getRandomBoolean();
 
-  const comments = [];
-  for (let i = 0; i < getRandomNumber(...filmsData.possibleComments); i++) {
-    comments.push(getRandomComment());
-  }
-
   return {
     id,
     title,
@@ -133,7 +128,6 @@ const getRandomFilm = () => {
     rating,
     date,
     duration,
-    comments,
     isFavorite,
     isWatched,
     inWatchlist,
@@ -148,4 +142,12 @@ const getRandomFilms = (count) => {
   return array;
 };
 
-export {getRandomFilms};
+const getRandomComments = () => {
+  const comments = [];
+  for (let i = 0; i < getRandomNumber(...filmsData.possibleComments); i++) {
+    comments.push(getRandomComment());
+  }
+  return comments;
+};
+
+export {getRandomFilms, getRandomComments};

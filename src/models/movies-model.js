@@ -1,6 +1,6 @@
 import {changeArrayElement} from '../utils/array';
 
-export default class Movies {
+export default class MoviesModel {
   constructor() {
     this._filterObservers = [];
   }
@@ -14,7 +14,7 @@ export default class Movies {
     return this._activeFilter;
   }
 
-  addObserverOnFilterChange(cb) {
+  onFilterChange(cb) {
     this._filterObservers.push(cb);
   }
 

@@ -3,12 +3,12 @@ import Filter from '../components/filter';
 import {render, replace} from '../utils/render';
 
 export default class FilterController extends AbstractComponent {
-  constructor(model, container) {
+  constructor(moviesModel, container) {
     super();
-    this._model = model;
-    this._model.addObserverOnFilterChange(this.render.bind(this));
+    this._moviesModel = moviesModel;
+    this._moviesModel.onFilterChange(this.render.bind(this));
     this._container = container;
-    this._filtersData = this._getFiltersData(this._model.getMovies());
+    this._filtersData = this._getFiltersData(this._moviesModel.getMovies());
   }
 
   _getFiltersData(films) {
@@ -31,13 +31,13 @@ export default class FilterController extends AbstractComponent {
   render() {
     if (this._filter) {
       const oldFilter = this._filter;
-      this._filter = new Filter(this._filtersData, this._model.getFilter());
+      this._filter = new Filter(this._filtersData, this._moviesModel.getFilter());
       replace(this._filter, oldFilter);
     } else {
-      this._filter = new Filter(this._filtersData, this._model.getFilter());
+      this._filter = new Filter(this._filtersData, this._moviesModel.getFilter());
       render(this._container, this._filter);
     }
 
-    this._filter.onChangeFilter(this._model.setFilter.bind(this._model));
+    this._filter.onChangeFilter(this._moviesModel.setFilter.bind(this._moviesModel));
   }
 }

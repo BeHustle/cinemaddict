@@ -1,7 +1,7 @@
 import {MAIN_FILMS_COUNT} from './constants';
 import {render} from './utils/render';
 import PageController from './controllers/page-controller';
-import Movies from './models/movies';
+import MoviesModel from './models/movies-model';
 import Statistics from './components/statistics';
 import UserProfile from './components/user-profile';
 import Sort from './components/sort';
@@ -19,11 +19,11 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const bodyElement = document.querySelector(`body`);
 
-const movieModel = new Movies();
-movieModel.setMovies(films);
+const moviesModel = new MoviesModel();
+moviesModel.setMovies(films);
 
-const filterController = new FilterController(movieModel, mainElement);
-const pageController = new PageController(movieModel, mainElement);
+const filterController = new FilterController(moviesModel, mainElement);
+const pageController = new PageController(moviesModel, mainElement);
 const footer = new Footer(films);
 
 render(headerElement, userProfile);
