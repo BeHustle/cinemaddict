@@ -71,7 +71,7 @@ const commentData = {
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`,
   ],
-  emojis: [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`],
+  emojis: [`angry`, `puke`, `sleeping`, `smile`],
   possibleTextLength: [1, 4],
   possibleDates: [now.getTime() - YEAR_IN_MS, now.getTime()],
 };

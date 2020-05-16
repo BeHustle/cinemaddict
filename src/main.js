@@ -37,3 +37,4 @@ pageController.render();
 
 render(mainElement, statistics);
 render(bodyElement, footer);
+

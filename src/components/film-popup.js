@@ -4,6 +4,7 @@ import {
   getFormatDuration
 } from '../utils/date-time';
 import AbstractSmartComponent from './abstract-smart-component';
+import {encode} from 'he';
 
 export default class FilmPopup extends AbstractSmartComponent {
   constructor(film, comments) {
@@ -40,7 +41,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       const {id, author, text, emoji, date} = cv;
       return acc + `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${emoji}" width="55" height="55" alt="emoji-smile">
+              <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
               <p class="film-details__comment-text">${text}</p>
@@ -198,6 +199,14 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._favoriteCallBack = cb;
   }
 
+  submitCommentForm(cb) {
+    const form = this
+      .getElement()
+      .querySelector(`.film-details__inner`);
+    const formData = new FormData(form);
+    cb({emoji: formData.get(`comment-emoji`), text: encode(formData.get(`comment`))});
+  }
+
   onCommentDelete(cb) {
     this
       .getElement()
@@ -205,6 +214,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       .forEach((btn) => {
         btn.addEventListener(`click`, cb);
       });
+    this._commentDeleteCallback = cb;
   }
 
   recoveryListeners() {
@@ -212,6 +222,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     this.onAddToWatchlist(this._watchlistCallBack);
     this.onMarkAsWatched(this._watchedCallBack);
     this.onMarkAsFavorite(this._favoriteCallBack);
+    this.onCommentDelete(this._commentDeleteCallback);
     this._rerenderOnChangeEmoji();
   }
 

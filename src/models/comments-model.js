@@ -18,7 +18,7 @@ export default class CommentsModel {
     this._comments[filmId].splice(index, 1);
   }
 
-  addComment(filmId, comment) {
+  _addComment(filmId, comment) {
     comment.id = getRandomNumber(1, 100000);
     this._comments[filmId].push(comment);
   }
@@ -27,7 +27,7 @@ export default class CommentsModel {
     if (comment.id) {
       this._removeComment(filmId, comment.id);
     } else {
-      this.addComment(filmId, comment);
+      this._addComment(filmId, comment);
     }
   }
 }
