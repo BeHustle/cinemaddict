@@ -6,9 +6,10 @@ import {
 import AbstractSmartComponent from './abstract-smart-component';
 
 export default class FilmPopup extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
     this._rerenderOnChangeEmoji();
   }
 
@@ -34,8 +35,8 @@ export default class FilmPopup extends AbstractSmartComponent {
    </section>`;
   }
 
-  _createFilmComments(comments) {
-    const commentsTemplate = comments ? comments.reduce((acc, cv) => {
+  _createFilmComments() {
+    const commentsTemplate = this._comments ? this._comments.reduce((acc, cv) => {
       const {id, author, text, emoji, date} = cv;
       return acc + `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
@@ -52,7 +53,7 @@ export default class FilmPopup extends AbstractSmartComponent {
           </li>`;
     }, ``) : ``;
     return (`<section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
             ${commentsTemplate}
@@ -94,7 +95,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     const {
       title, originalTitle, rating, director, writers, poster,
       actors, date, duration, countries, genres, description,
-      ageRating, isFavorite, isWatched, inWatchlist, comments,
+      ageRating, isFavorite, isWatched, inWatchlist
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
@@ -103,7 +104,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     const filmCountries = countries.join(`, `);
     const filmGenresTemplate = this._createFilmGenres(genres);
     const filmControlsSection = this._createFilmControls(isWatched, inWatchlist, isFavorite);
-    const filmComments = this._createFilmComments(comments);
+    const filmComments = this._createFilmComments();
 
     return (`<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -197,17 +198,14 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._favoriteCallBack = cb;
   }
 
-  /* onCommentDelete(cb) {
+  onCommentDelete(cb) {
     this
       .getElement()
       .querySelectorAll(`.film-details__comment-delete`)
       .forEach((btn) => {
-        btn.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-          cb(evt.currentTarget.dataset.comment);
-        });
+        btn.addEventListener(`click`, cb);
       });
-  }*/
+  }
 
   recoveryListeners() {
     this.onClosePopup(this._closeCallBack);

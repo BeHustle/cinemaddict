@@ -1,3 +1,5 @@
+import {getRandomNumber} from '../utils/random';
+
 export default class CommentsModel {
   constructor() {
     this._comments = {};
@@ -7,16 +9,25 @@ export default class CommentsModel {
     this._comments[filmId] = comments;
   }
 
-  getComments(filmId) {
+  getCommentsByFilmId(filmId) {
     return this._comments[filmId];
   }
 
-  removeComment(filmId, commentId) {
+  _removeComment(filmId, commentId) {
     const index = this._comments[filmId].findIndex((it) => it.id === commentId);
     this._comments[filmId].splice(index, 1);
   }
 
   addComment(filmId, comment) {
+    comment.id = getRandomNumber(1, 100000);
     this._comments[filmId].push(comment);
+  }
+
+  updateComment(filmId, comment) {
+    if (comment.id) {
+      this._removeComment(filmId, comment.id);
+    } else {
+      this.addComment(filmId, comment);
+    }
   }
 }

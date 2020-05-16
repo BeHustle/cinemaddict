@@ -5,10 +5,11 @@ import {ESCAPE_KEY} from '../constants';
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, onCommentChange) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._onCommentChange = onCommentChange;
     this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
   }
 
@@ -16,6 +17,14 @@ export default class MovieController {
     const newFilm = Object.assign({}, film);
     newFilm[flag] = !newFilm[flag];
     this._onDataChange(this, film, newFilm);
+  }
+
+  _setCommentUpdateHandler(film, popup) {
+    popup.onCommentDelete((evt) => {
+      const id = evt.currentTarget.dataset.comment;
+      evt.preventDefault();
+      this._onCommentChange(this, film, {id});
+    });
   }
 
   _setDataChangeHandlers(film, component) {
@@ -53,12 +62,13 @@ export default class MovieController {
     this.deleteFilmPopup();
   }
 
-  render(film) {
+  render(film, comments) {
     const createFilmPopup = () => {
       this._onViewChange();
       this.renderFilmPopup();
       this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
       this._setDataChangeHandlers(film, this._filmPopup);
+      this._setCommentUpdateHandler(film, this._filmPopup);
       this._isPopupOpened = true;
       document.addEventListener(`keydown`, this._closePopupOnEscape);
     };
@@ -66,8 +76,8 @@ export default class MovieController {
     if (this._filmCard && this._filmPopup) {
       const oldFilmCard = this._filmCard;
       const oldFilmPopup = this._filmPopup;
-      this._filmCard = new FilmCard(film);
-      this._filmPopup = new FilmPopup(film);
+      this._filmCard = new FilmCard(film, comments.length);
+      this._filmPopup = new FilmPopup(film, comments);
       replace(this._filmCard, oldFilmCard);
       this._filmCard.onShowPopup(createFilmPopup);
       this._setDataChangeHandlers(film, this._filmCard);
@@ -76,10 +86,11 @@ export default class MovieController {
       if (this._isPopupOpened) {
         this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
         this._setDataChangeHandlers(film, this._filmPopup);
+        this._setCommentUpdateHandler(film, this._filmPopup);
       }
     } else {
-      this._filmCard = new FilmCard(film);
-      this._filmPopup = new FilmPopup(film);
+      this._filmCard = new FilmCard(film, comments.length);
+      this._filmPopup = new FilmPopup(film, comments);
       this._setDataChangeHandlers(film, this._filmCard);
       this._filmCard.onShowPopup(createFilmPopup);
       render(this._container, this._filmCard);
