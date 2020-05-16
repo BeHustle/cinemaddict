@@ -9,6 +9,7 @@ export default class MovieController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
   }
 
   _changeFlag(film, flag) {
@@ -59,7 +60,7 @@ export default class MovieController {
       this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
       this._setDataChangeHandlers(film, this._filmPopup);
       this._isPopupOpened = true;
-      document.addEventListener(`keydown`, this._closePopupOnEscape.bind(this));
+      document.addEventListener(`keydown`, this._closePopupOnEscape);
     };
 
     if (this._filmCard && this._filmPopup) {

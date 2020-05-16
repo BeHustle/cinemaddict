@@ -3,22 +3,24 @@ import AbstractComponent from './abstract-component';
 export default class MainFilmsSection extends AbstractComponent {
   constructor(title) {
     super();
-    switch (title) {
-      case `loading`:
-        this._title = `<h2 class="films-list__title">Loading...</h2>`;
-        break;
-      case `no-data`:
-        this._title = `<h2 class="films-list__title">There are no movies in our database</h2>`;
-        break;
-      default:
-        this._title = `<h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>`;
-    }
+    this._title = title;
   }
 
   getTemplate() {
+    let title = `<h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>`;
+    switch (this._title) {
+      case `loading`:
+        title = `<h2 class="films-list__title">Loading...</h2>`;
+        break;
+      case `no-data`:
+        title = `<h2 class="films-list__title">There are no movies in our database</h2>`;
+        break;
+      default:
+        break;
+    }
     return (`<section class="films">
       <section class="films-list">
-        ${this._title}
+        ${title}
         <div class="films-list__container"></div>
        </section>
     </section>`);
