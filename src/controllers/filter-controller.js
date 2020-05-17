@@ -29,12 +29,11 @@ export default class FilterController extends AbstractComponent {
   }
 
   render() {
-    if (this._filter) {
-      const oldFilter = this._filter;
-      this._filter = new Filter(this._filtersData, this._moviesModel.getFilter());
+    const oldFilter = this._filter;
+    this._filter = new Filter(this._filtersData, this._moviesModel.getFilter());
+    if (oldFilter) {
       replace(this._filter, oldFilter);
     } else {
-      this._filter = new Filter(this._filtersData, this._moviesModel.getFilter());
       render(this._container, this._filter);
     }
 
