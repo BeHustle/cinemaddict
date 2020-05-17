@@ -1,9 +1,10 @@
 import {
   getCommentFormatDate,
   getMonthName,
-  getFormatDuration
+  getFormatDuration,
 } from '../utils/date-time';
 import AbstractSmartComponent from './abstract-smart-component';
+import {ENTER_KEY} from '../constants';
 import {encode} from 'he';
 
 export default class FilmPopup extends AbstractSmartComponent {
@@ -96,7 +97,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     const {
       title, originalTitle, rating, director, writers, poster,
       actors, date, duration, countries, genres, description,
-      ageRating, isFavorite, isWatched, inWatchlist
+      ageRating, isFavorite, isWatched, inWatchlist,
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
@@ -205,6 +206,17 @@ export default class FilmPopup extends AbstractSmartComponent {
       .querySelector(`.film-details__inner`);
     const formData = new FormData(form);
     cb({emoji: formData.get(`comment-emoji`), text: encode(formData.get(`comment`))});
+  }
+
+  onCommentsFormSubmit(cb) {
+    this
+      .getElement()
+      .querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, (evt) => {
+        if (evt.ctrlKey && evt.key === ENTER_KEY) {
+          this.submitCommentForm(cb);
+        }
+      });
   }
 
   onCommentDelete(cb) {

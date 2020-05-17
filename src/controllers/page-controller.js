@@ -14,21 +14,19 @@ import {
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 
 export default class PageController {
-  constructor(moviesModel, commentsModel, container) {
+  constructor(moviesModel, container) {
     this._container = container;
     this._moviesModel = moviesModel;
-    this._commentsModel = commentsModel;
     this._moviesModel.onFilterChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
-    this._onCommentChange = this._onCommentChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];
   }
 
   _renderFilms(films, container) {
     films.forEach((film) => {
-      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._onCommentChange);
-      movieController.render(film, this._commentsModel.getCommentsByFilmId(film.id));
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
+      movieController.render(film);
       this._movieControllers.push(movieController);
     });
   }
@@ -39,12 +37,7 @@ export default class PageController {
 
   _onDataChange(controller, film, newFilm) {
     this._moviesModel.setMovie(film.id, newFilm);
-    controller.render(this._moviesModel.getMovie(newFilm.id), this._commentsModel.getCommentsByFilmId(newFilm.id));
-  }
-
-  _onCommentChange(controller, film, comment) {
-    this._commentsModel.updateComment(film.id, comment);
-    controller.render(this._moviesModel.getMovie(film.id), this._commentsModel.getCommentsByFilmId(film.id));
+    controller.render(this._moviesModel.getMovie(newFilm.id));
   }
 
   render() {

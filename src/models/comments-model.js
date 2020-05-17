@@ -1,33 +1,33 @@
-import {getRandomNumber} from '../utils/random';
-
 export default class CommentsModel {
   constructor() {
-    this._comments = {};
+    this._comments = [];
+    this._dataObservers = [];
   }
 
-  setComments(filmId, comments) {
-    this._comments[filmId] = comments;
+  onDataChange(cb) {
+    this._dataObservers.push(cb);
   }
 
-  getCommentsByFilmId(filmId) {
-    return this._comments[filmId];
+  setComments(comments) {
+    this._comments = comments;
   }
 
-  _removeComment(filmId, commentId) {
-    const index = this._comments[filmId].findIndex((it) => it.id === commentId);
-    this._comments[filmId].splice(index, 1);
+  getCommentsCount() {
+    return this._comments.length;
   }
 
-  _addComment(filmId, comment) {
-    comment.id = getRandomNumber(1, 100000);
-    this._comments[filmId].push(comment);
+  getComments() {
+    return this._comments;
   }
 
-  updateComment(filmId, comment) {
-    if (comment.id) {
-      this._removeComment(filmId, comment.id);
-    } else {
-      this._addComment(filmId, comment);
-    }
+  removeComment(commentId) {
+    const index = this._comments.findIndex((it) => it.id === commentId);
+    this._comments.splice(index, 1);
+    this._dataObservers.forEach((cb) => cb());
+  }
+
+  addComment(comment) {
+    this._comments.push(comment);
+    this._dataObservers.forEach((cb) => cb());
   }
 }
