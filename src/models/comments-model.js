@@ -22,12 +22,19 @@ export default class CommentsModel {
 
   removeComment(commentId) {
     const index = this._comments.findIndex((it) => it.id === commentId);
-    this._comments.splice(index, 1);
+    if (index === -1) {
+      return;
+    }
+    const newComments = this.getComments();
+    newComments.splice(index, 1);
+    this.setComments(newComments);
     this._dataObservers.forEach((cb) => cb());
   }
 
   addComment(comment) {
-    this._comments.push(comment);
+    const newComments = this.getComments();
+    newComments.push(comment);
+    this.setComments(newComments);
     this._dataObservers.forEach((cb) => cb());
   }
 }

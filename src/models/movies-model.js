@@ -3,6 +3,7 @@ import {changeArrayElement} from '../utils/array';
 export default class MoviesModel {
   constructor() {
     this._filterObservers = [];
+    this._activeFilter = ``;
   }
 
   setFilter(filter) {
@@ -27,7 +28,6 @@ export default class MoviesModel {
 
   setMovies(movies) {
     this._movies = movies;
-    this._activeFilter = ``;
   }
 
   getMovie(id) {
@@ -41,6 +41,7 @@ export default class MoviesModel {
     if (index === -1) {
       return;
     }
-    this._movies = changeArrayElement(this._movies, movie, index);
+    const newMovies = changeArrayElement(this._movies, movie, index);
+    this.setMovies(newMovies);
   }
 }

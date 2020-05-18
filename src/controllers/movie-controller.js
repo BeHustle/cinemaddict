@@ -28,7 +28,7 @@ export default class MovieController {
 
   _setCommentDeleteHandler(popup) {
     popup.onCommentDelete((evt) => {
-      const id = evt.currentTarget.dataset.comment;
+      const id = parseInt(evt.currentTarget.dataset.comment, 10);
       evt.preventDefault();
       this._commentsModel.removeComment(id);
     });
