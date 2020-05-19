@@ -38,6 +38,7 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _createFilmComments() {
+    const commentsCount = this._comments ? this._comments.length : 0;
     const commentsTemplate = this._comments ? this._comments.reduce((acc, cv) => {
       const {id, author, text, emoji, date} = cv;
       return acc + `<li class="film-details__comment">
@@ -55,7 +56,7 @@ export default class FilmPopup extends AbstractSmartComponent {
           </li>`;
     }, ``) : ``;
     return (`<section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
         <ul class="film-details__comments-list">
             ${commentsTemplate}
@@ -116,7 +117,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
+          <img class="film-details__poster-img" src="${poster}" alt="${title}">
 
           <p class="film-details__age">${ageRating}</p>
         </div>
