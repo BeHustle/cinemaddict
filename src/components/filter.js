@@ -1,5 +1,6 @@
 import AbstractSmartComponent from './abstract-smart-component';
 
+
 export default class Filter extends AbstractSmartComponent {
   constructor(filtersData, activeFilter) {
     super();
@@ -19,12 +20,15 @@ export default class Filter extends AbstractSmartComponent {
     </nav>`);
   }
 
-  onFilterChange(cb) {
+  onChangeFilter(cb) {
     this
       .getElement()
       .querySelectorAll(`.main-navigation__item`)
       .forEach((item) => {
-        item.addEventListener(`click`, cb);
+        item.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+          cb(evt.currentTarget.dataset.flag);
+        });
       });
   }
 }
