@@ -4,21 +4,22 @@ import AbstractSmartComponent from './abstract-smart-component';
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
 
 export default class FilmCard extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, countComments) {
     super();
     this._film = film;
+    this._countComments = countComments;
   }
 
   getTemplate() {
     const {
       title, rating, date, duration,
-      genres, description, poster, comments,
+      genres, description, poster,
       isFavorite, isWatched, inWatchlist,
     } = this._film;
     const filmYear = date.getFullYear();
     const filmDuration = getFormatDuration(duration);
     const filmGenre = genres.join(`, `);
-    const countComments = `${comments.length} comments`;
+    const countComments = `${this._countComments} comments`;
     const favoriteFilm = isFavorite ? CONTROLS_ACTIVE_BTN_CLASS : ``;
     const watchedFilm = isWatched ? CONTROLS_ACTIVE_BTN_CLASS : ``;
     const watchlistFilm = inWatchlist ? CONTROLS_ACTIVE_BTN_CLASS : ``;

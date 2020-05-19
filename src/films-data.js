@@ -71,12 +71,13 @@ const commentData = {
     `Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat`,
     `Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`,
   ],
-  emojis: [`angry.png`, `puke.png`, `sleeping.png`, `smile.png`],
+  emojis: [`angry`, `puke`, `sleeping`, `smile`],
   possibleTextLength: [1, 4],
   possibleDates: [now.getTime() - YEAR_IN_MS, now.getTime()],
 };
 
 const getRandomComment = () => {
+  const id = getRandomNumber(1, 100000);
   const {authors, possibleDates, possibleTextLength, emojis, texts} = commentData;
   const author = getRandomArrayElement(authors);
   const text = shuffleArray(texts)
@@ -84,10 +85,11 @@ const getRandomComment = () => {
     .join(`. `);
   const emoji = getRandomArrayElement(emojis);
   const date = new Date(getRandomNumber(...possibleDates));
-  return {author, text, emoji, date};
+  return {id, author, text, emoji, date};
 };
 
 const getRandomFilm = () => {
+  const id = getRandomNumber(1, 100000);
   const title = getRandomArrayElement(filmsData.titles);
   const originalTitle = getRandomArrayElement(filmsData.originalTitles);
   const poster = getRandomArrayElement(filmsData.posters);
@@ -111,12 +113,8 @@ const getRandomFilm = () => {
   const isWatched = getRandomBoolean();
   const inWatchlist = getRandomBoolean();
 
-  const comments = [];
-  for (let i = 0; i < getRandomNumber(...filmsData.possibleComments); i++) {
-    comments.push(getRandomComment());
-  }
-
   return {
+    id,
     title,
     originalTitle,
     poster,
@@ -130,7 +128,6 @@ const getRandomFilm = () => {
     rating,
     date,
     duration,
-    comments,
     isFavorite,
     isWatched,
     inWatchlist,
@@ -145,4 +142,12 @@ const getRandomFilms = (count) => {
   return array;
 };
 
-export {getRandomFilms};
+const getRandomComments = () => {
+  const comments = [];
+  for (let i = 0; i < getRandomNumber(...filmsData.possibleComments); i++) {
+    comments.push(getRandomComment());
+  }
+  return comments;
+};
+
+export {getRandomFilms, getRandomComments};
