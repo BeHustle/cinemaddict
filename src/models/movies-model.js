@@ -41,7 +41,7 @@ export default class MoviesModel {
     if (index === -1) {
       return;
     }
-    const newMovies = changeArrayElement(this._movies, movie, index);
+    const newMovies = changeArrayElement(this._movies.slice(), movie, index);
     this.setMovies(newMovies);
   }
 }

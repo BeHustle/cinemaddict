@@ -1,10 +1,10 @@
-import {ESCAPE_KEY, URL, API_KEY} from '../constants';
-import {render, replace} from '../utils/render';
-import {getRandomNumber} from '../utils/random';
-import API from '../api';
 import FilmCard from '../components/film-card';
 import FilmPopup from '../components/film-popup';
 import CommentsModel from '../models/comments-model';
+import {render, replace} from '../utils/render';
+import {getRandomComments} from '../films-data';
+import {ESCAPE_KEY} from '../constants';
+import {getRandomNumber} from '../utils/random';
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
@@ -12,11 +12,11 @@ export default class MovieController {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
-    this._api = new API(URL, API_KEY);
 
     this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
 
     this._commentsModel = new CommentsModel();
+    this._commentsModel.setComments(getRandomComments());
     this._commentsModel.onDataChange(this.rerender.bind(this));
   }
 
@@ -93,32 +93,24 @@ export default class MovieController {
 
     this._film = film;
     const oldFilmCard = this._filmCard;
-    this._filmCard = new FilmCard(this._film);
+    const oldFilmPopup = this._filmPopup;
+    this._filmCard = new FilmCard(this._film, this._commentsModel.getCommentsCount());
+    this._filmPopup = new FilmPopup(this._film, this._commentsModel.getComments());
+    this._filmCard.onShowPopup(createFilmPopup);
     this._setDataChangeHandlers(this._film, this._filmCard);
-    if (oldFilmCard) {
-      replace(this._filmCard, oldFilmCard);
 
+    if (oldFilmCard && oldFilmPopup) {
+      replace(this._filmCard, oldFilmCard);
+      replace(this._filmPopup, oldFilmPopup);
+      if (this._isPopupOpened) {
+        this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
+        this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
+        this._setDataChangeHandlers(this._film, this._filmPopup);
+        this._setCommentDeleteHandler(this._filmPopup);
+      }
     } else {
       render(this._container, this._filmCard);
     }
-
-    this._api.getComments(this._film.id)
-      .then((comments) => {
-        this._commentsModel.setComments(comments);
-        const oldFilmPopup = this._filmPopup;
-        this._filmPopup = new FilmPopup(this._film, this._commentsModel.getComments());
-        this._filmCard.onShowPopup(createFilmPopup);
-
-        if (oldFilmPopup) {
-          replace(this._filmPopup, oldFilmPopup);
-          if (this._isPopupOpened) {
-            this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
-            this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
-            this._setDataChangeHandlers(this._film, this._filmPopup);
-            this._setCommentDeleteHandler(this._filmPopup);
-          }
-        }
-      });
   }
 
   rerender() {
