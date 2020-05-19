@@ -7,7 +7,8 @@ import Statistics from './components/statistics';
 import UserProfile from './components/user-profile';
 import Sort from './components/sort';
 import FilterController from './controllers/filter-controller';
-import Footer from './components/footer';
+import FooterController from './controllers/footer-controller';
+
 
 const api = new API(URL, API_KEY);
 const moviesModel = new MoviesModel();
@@ -25,11 +26,11 @@ render(mainElement, sort);
 
 const filterController = new FilterController(moviesModel, mainElement);
 const pageController = new PageController(moviesModel, mainElement);
-const footer = new Footer(moviesModel);
+const footerController = new FooterController(moviesModel, bodyElement);
 
 filterController.render();
 pageController.render();
-render(bodyElement, footer);
+footerController.render();
 
 render(mainElement, statistics);
 

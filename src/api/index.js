@@ -26,6 +26,17 @@ export default class API {
       .then(CommentModel.parseComments);
   }
 
+  updateMovie(id, data) {
+    return this._load({
+      path: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then(MovieModel.parseMovie);
+  }
+
   _checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;

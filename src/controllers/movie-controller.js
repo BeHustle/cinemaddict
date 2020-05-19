@@ -5,6 +5,7 @@ import API from '../api';
 import FilmCard from '../components/film-card';
 import FilmPopup from '../components/film-popup';
 import CommentsModel from '../models/comments-model';
+import MovieModel from '../models/movie-model';
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
@@ -21,7 +22,7 @@ export default class MovieController {
   }
 
   _changeFlag(film, flag) {
-    const newFilm = Object.assign({}, film);
+    const newFilm = MovieModel.parseMovie(film.toRAW());
     newFilm[flag] = !newFilm[flag];
     this._onDataChange(this, film, newFilm);
   }

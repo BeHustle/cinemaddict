@@ -1,4 +1,5 @@
 import {render, replace} from '../utils/render';
+import API from '../api';
 import MostCommentedFilmsSection from '../components/most-commented-films-section';
 import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
@@ -10,13 +11,16 @@ import {
   MOST_COMMENTED_FILMS_COUNT,
   TOP_RATED_FILMS_COUNT,
   LOADING_STATE,
-  NO_DATA_STATE
+  NO_DATA_STATE,
+  URL,
+  API_KEY
 } from '../constants';
 
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 
 export default class PageController {
   constructor(moviesModel, container) {
+    this._api = new API(URL, API_KEY);
     this._container = container;
     this._moviesModel = moviesModel;
     this._moviesModel.onDataChange(this.render.bind(this));
@@ -38,8 +42,11 @@ export default class PageController {
   }
 
   _onDataChange(controller, film, newFilm) {
-    this._moviesModel.setMovie(film.id, newFilm);
-    controller.render(this._moviesModel.getMovie(newFilm.id));
+    this._api.updateMovie(film.id, newFilm)
+      .then((movie) => {
+        this._moviesModel.setMovie(film.id, movie);
+        controller.render(this._moviesModel.getMovie(newFilm.id));
+      });
   }
 
   render() {
