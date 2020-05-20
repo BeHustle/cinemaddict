@@ -1,19 +1,17 @@
-const getMonthName = (dateObject) => {
-  const monthNames = [
-    `January`, `February`, `March`, `April`, `May`, `June`,
-    `July`, `August`, `September`, `October`, `November`, `December`,
-  ];
-  return monthNames[dateObject.getMonth()];
-};
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
+momentDurationFormatSetup(moment);
 
 const getFormatDuration = (duration) => {
-  const hours = Math.floor(duration / 60);
-  const minutes = Math.round(duration % 60);
-  return `${hours}h ${minutes}m`;
+  return moment.duration(duration, `minutes`).format(`h[h] m[m]`);
+};
+
+const getReleaseDate = (date) => {
+  return moment(date).format(`DD MMMM YYYY`);
 };
 
 const getCommentFormatDate = (date) => {
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+  return moment(date).fromNow();
 };
 
-export {getMonthName, getFormatDuration, getCommentFormatDate};
+export {getReleaseDate, getFormatDuration, getCommentFormatDate};
