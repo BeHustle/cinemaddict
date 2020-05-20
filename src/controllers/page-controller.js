@@ -14,7 +14,7 @@ import {
   LOADING_STATE,
   NO_DATA_STATE,
   URL,
-  API_KEY
+  API_KEY,
 } from '../constants';
 
 let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
@@ -51,6 +51,15 @@ export default class PageController {
   }
 
   render() {
+    const oldSortComponent = this._sortComponent;
+    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
+
+    if (oldSortComponent) {
+      replace(this._sortComponent, oldSortComponent);
+    } else {
+      render(this._container, this._sortComponent);
+    }
+
     if (this._moviesModel.getState() === LOADING_STATE) {
       this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
       render(this._container, this._mainFilmsSection);
@@ -61,45 +70,26 @@ export default class PageController {
       render(this._container, this._mainFilmsSection);
       return;
     }
+
     const films = this._moviesModel.getMovies();
-    if (films) {
-      const oldFilmsSection = this._mainFilmsSection;
-      this._mainFilmsSection = new MainFilmsSection();
-      const oldSortComponent = this._sortComponent;
-      this._sortComponent = new Sort(this._moviesModel.getActiveSort());
-
-      if (oldSortComponent) {
-        replace(this._sortComponent, oldSortComponent);
-      } else {
-        render(this._container, this._sortComponent);
-      }
-
-      if (oldFilmsSection) {
-        replace(this._mainFilmsSection, oldFilmsSection);
-      } else {
-        render(this._container, this._mainFilmsSection);
-      }
     const oldFilmsSection = this._mainFilmsSection;
     this._mainFilmsSection = new MainFilmsSection();
+
     if (oldFilmsSection) {
       replace(this._mainFilmsSection, oldFilmsSection);
     } else {
       render(this._container, this._mainFilmsSection);
     }
 
-      this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
-      this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
-      this._topRatedFilmsSection = new TopRatedFilmsSection();
-      this._moreButton = new MoreButton();
-      const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
-      const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
-      const mainFilms = films.slice(0, showingFilmsCount);
+    this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
     this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
     this._topRatedFilmsSection = new TopRatedFilmsSection();
     this._moreButton = new MoreButton();
     const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
     const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
     const mainFilms = films.slice(0, showingFilmsCount);
+    this._topRatedFilmsSection = new TopRatedFilmsSection();
+    this._moreButton = new MoreButton();
 
     if (films.length > showingFilmsCount) {
       render(this._mainFilmsSection.getFilmsList(), this._moreButton);
