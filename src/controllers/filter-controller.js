@@ -6,7 +6,7 @@ export default class FilterController extends AbstractComponent {
   constructor(moviesModel, container) {
     super();
     this._moviesModel = moviesModel;
-    this._moviesModel.onFilterChange(this.render.bind(this));
+    this._moviesModel.onDataChange(this.render.bind(this));
     this._container = container;
     this._filtersData = this._getFiltersData(this._moviesModel.getMovies());
   }

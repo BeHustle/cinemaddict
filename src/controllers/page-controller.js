@@ -4,6 +4,7 @@ import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
 import MoreButton from '../components/more-button';
 import MovieController from './movie-controller';
+import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
@@ -17,7 +18,7 @@ export default class PageController {
   constructor(moviesModel, container) {
     this._container = container;
     this._moviesModel = moviesModel;
-    this._moviesModel.onFilterChange(this.render.bind(this));
+    this._moviesModel.onDataChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];
@@ -45,12 +46,22 @@ export default class PageController {
     if (films) {
       const oldFilmsSection = this._mainFilmsSection;
       this._mainFilmsSection = new MainFilmsSection();
+      const oldSortComponent = this._sortComponent;
+      this._sortComponent = new Sort(this._moviesModel.getActiveSort());
+
+      if (oldSortComponent) {
+        replace(this._sortComponent, oldSortComponent);
+      } else {
+        render(this._container, this._sortComponent);
+      }
+
       if (oldFilmsSection) {
         replace(this._mainFilmsSection, oldFilmsSection);
       } else {
         render(this._container, this._mainFilmsSection);
       }
 
+      this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
       this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
       this._topRatedFilmsSection = new TopRatedFilmsSection();
       this._moreButton = new MoreButton();

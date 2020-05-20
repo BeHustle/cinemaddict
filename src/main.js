@@ -4,12 +4,10 @@ import PageController from './controllers/page-controller';
 import MoviesModel from './models/movies-model';
 import Statistics from './components/statistics';
 import UserProfile from './components/user-profile';
-import Sort from './components/sort';
 import FilterController from './controllers/filter-controller';
 import Footer from './components/footer';
 import {getRandomFilms} from './films-data';
 
-const sort = new Sort();
 const userProfile = new UserProfile();
 const statistics = new Statistics();
 
@@ -28,7 +26,6 @@ const footer = new Footer(films);
 
 render(headerElement, userProfile);
 filterController.render();
-render(mainElement, sort);
 
 pageController.render();
 
