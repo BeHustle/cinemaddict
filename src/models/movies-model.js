@@ -1,9 +1,11 @@
 import {changeArrayElement} from '../utils/array';
+import {LOADING_STATE, DONE_STATE} from '../constants';
 
 export default class MoviesModel {
   constructor() {
     this._dataObservers = [];
     this._activeFilter = ``;
+    this._state = LOADING_STATE;
     this._activeSort = `default`;
   }
 
@@ -23,6 +25,10 @@ export default class MoviesModel {
 
   getFilter() {
     return this._activeFilter;
+  }
+
+  getState() {
+    return this._state;
   }
 
   onDataChange(cb) {
@@ -47,8 +53,18 @@ export default class MoviesModel {
     return this._sortMovies(this._movies);
   }
 
+  getAllMovies() {
+    return this._movies;
+  }
+
+  getCountMovies() {
+    return this._movies ? this._movies.length : 0;
+  }
+
   setMovies(movies) {
     this._movies = movies;
+    this._state = DONE_STATE;
+    this._dataObservers.forEach((cb) => cb());
   }
 
   getMovie(id) {
@@ -62,7 +78,7 @@ export default class MoviesModel {
     if (index === -1) {
       return;
     }
-    const newMovies = changeArrayElement(this._movies.slice(), movie, index);
+    const newMovies = changeArrayElement(this._movies, movie, index);
     this.setMovies(newMovies);
   }
 }
