@@ -10,32 +10,29 @@ export default class FilterController extends AbstractComponent {
     this._container = container;
   }
 
-  _getFiltersData() {
-    this._films = this._moviesModel.getAllMovies();
-    const getCountFilmsByFlag = (flag) => {
-      if (!this._films) {
-        return 0;
-      }
-      return flag ? this._films.filter((film) => film[flag]).length : this._films.length;
-    };
-    const getFilterCount = (title, flag = ``) => {
-      return {
-        title,
-        flag,
-        count: getCountFilmsByFlag(flag),
-      };
-    };
-
-    return [
-      getFilterCount(`All movies`),
-      getFilterCount(`History`, `isWatched`),
-      getFilterCount(`Watchlist`, `inWatchlist`),
-      getFilterCount(`Favorites`, `isFavorite`),
-    ];
+  _getCountFilmsByFlag(flag) {
+    if (!this._films) {
+      return 0;
+    }
+    return flag ? this._films.filter((film) => film[flag]).length : this._films.length;
   }
 
-  _updateFilter(evt) {
-    this._moviesModel.setFilter(evt.currentTarget.dataset.flag);
+  _getFilterCount(title, flag = ``) {
+    return {
+      title,
+      flag,
+      count: this._getCountFilmsByFlag(flag),
+    };
+  }
+
+  _getFiltersData() {
+    this._films = this._moviesModel.getAllMovies();
+    return [
+      this._getFilterCount(`All movies`),
+      this._getFilterCount(`History`, `isWatched`),
+      this._getFilterCount(`Watchlist`, `inWatchlist`),
+      this._getFilterCount(`Favorites`, `isFavorite`),
+    ];
   }
 
   render() {
@@ -47,6 +44,6 @@ export default class FilterController extends AbstractComponent {
       render(this._container, this._filter);
     }
 
-    this._filter.onFilterChange(this._updateFilter.bind(this));
+    this._filter.onFilterChange(this._moviesModel.setFilter.bind(this._moviesModel));
   }
 }

@@ -24,7 +24,9 @@ export default class Filter extends AbstractSmartComponent {
       .getElement()
       .querySelectorAll(`.main-navigation__item`)
       .forEach((item) => {
-        item.addEventListener(`click`, cb);
+        item.addEventListener(`click`, (evt) => {
+          cb(evt.currentTarget.dataset.flag);
+        });
       });
   }
 }

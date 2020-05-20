@@ -20,4 +20,8 @@ export default class CommentModel {
   static parseComments(data) {
     return data.map(CommentModel.parseComment);
   }
+
+  static clone(data) {
+    return new CommentModel(data.toRAW());
+  }
 }

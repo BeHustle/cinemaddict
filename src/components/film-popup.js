@@ -230,15 +230,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._commentDeleteCallback = cb;
   }
 
-  recoveryListeners() {
-    this.onClosePopup(this._closeCallBack);
-    this.onAddToWatchlist(this._watchlistCallBack);
-    this.onMarkAsWatched(this._watchedCallBack);
-    this.onMarkAsFavorite(this._favoriteCallBack);
-    this.onCommentDelete(this._commentDeleteCallback);
-    this._rerenderOnChangeEmoji();
-  }
-
   _onEmojiChange(evt) {
     const emojiImg = this
       .getElement()

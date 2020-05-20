@@ -63,11 +63,4 @@ export default class FilmCard extends AbstractSmartComponent {
     this.addCbToClickOnElement(`.film-card__controls-item--favorite`, cb);
     this._favoriteCallBack = cb;
   }
-
-  recoveryListeners() {
-    this.onShowPopup(this._showPopupCallBack);
-    this.onAddToWatchlist(this._watchlistCallback);
-    this.onMarkAsWatched(this._watchedCallBack);
-    this.onMarkAsFavorite(this._favoriteCallBack);
-  }
 }

@@ -61,4 +61,8 @@ export default class MovieModel {
   static parseMovies(data) {
     return data.map(MovieModel.parseMovie);
   }
+
+  static clone(data) {
+    return new MovieModel(data.toRAW());
+  }
 }

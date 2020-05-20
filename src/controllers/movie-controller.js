@@ -22,7 +22,7 @@ export default class MovieController {
   }
 
   _changeFlag(film, flag) {
-    const newFilm = MovieModel.parseMovie(film.toRAW());
+    const newFilm = MovieModel.clone(film);
     newFilm[flag] = !newFilm[flag];
     this._onDataChange(this, film, newFilm);
   }
@@ -80,43 +80,42 @@ export default class MovieController {
     this.deleteFilmPopup();
   }
 
+  _setPopupHandlers() {
+    this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
+    this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
+    this._setDataChangeHandlers(this._film, this._filmPopup);
+    this._setCommentDeleteHandler(this._filmPopup);
+  }
+
   render(film) {
     const createFilmPopup = () => {
       this._onViewChange();
       this.renderFilmPopup();
-      this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
-      this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
-      this._setDataChangeHandlers(this._film, this._filmPopup);
-      this._setCommentDeleteHandler(this._filmPopup);
+      this._setPopupHandlers();
       this._isPopupOpened = true;
       document.addEventListener(`keydown`, this._closePopupOnEscape);
     };
-
     this._film = film;
-    const oldFilmCard = this._filmCard;
-    this._filmCard = new FilmCard(this._film);
-    this._setDataChangeHandlers(this._film, this._filmCard);
-    if (oldFilmCard) {
-      replace(this._filmCard, oldFilmCard);
-
-    } else {
-      render(this._container, this._filmCard);
-    }
-
     this._api.getComments(this._film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
+        const oldFilmCard = this._filmCard;
+        this._filmCard = new FilmCard(this._film);
+        this._setDataChangeHandlers(this._film, this._filmCard);
+        if (oldFilmCard) {
+          replace(this._filmCard, oldFilmCard);
+
+        } else {
+          render(this._container, this._filmCard);
+        }
+
         const oldFilmPopup = this._filmPopup;
         this._filmPopup = new FilmPopup(this._film, this._commentsModel.getComments());
         this._filmCard.onShowPopup(createFilmPopup);
-
         if (oldFilmPopup) {
           replace(this._filmPopup, oldFilmPopup);
           if (this._isPopupOpened) {
-            this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
-            this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
-            this._setDataChangeHandlers(this._film, this._filmPopup);
-            this._setCommentDeleteHandler(this._filmPopup);
+            this._setPopupHandlers();
           }
         }
       });
