@@ -1,6 +1,6 @@
 import {
   getCommentFormatDate,
-  getReleaseDate,
+  getMonthName,
   getFormatDuration,
 } from '../utils/date-time';
 import AbstractSmartComponent from './abstract-smart-component';
@@ -101,7 +101,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
-    const filmReleaseDate = getReleaseDate(date);
+    const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
     const filmDuration = getFormatDuration(duration);
     const filmCountries = countries.join(`, `);
     const filmGenresTemplate = this._createFilmGenres(genres);
