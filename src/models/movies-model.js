@@ -40,9 +40,9 @@ export default class MoviesModel {
       case `date`:
         return movies.sort((a, b) => b.date.getTime() - a.date.getTime());
       case `rating`:
-        return movies.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+        return movies.sort((a, b) => b.rating * 10 - a.rating * 10);
       default:
-        return movies.sort((a, b) => parseInt(b.id, 10) - parseInt(a.id, 10));
+        return movies.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
     }
   }
 

@@ -17,8 +17,6 @@ import {
   API_KEY,
 } from '../constants';
 
-let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
-
 export default class PageController {
   constructor(moviesModel, container) {
     this._api = new API(URL, API_KEY);
@@ -74,13 +72,13 @@ export default class PageController {
     const films = this._moviesModel.getMovies();
     const oldFilmsSection = this._mainFilmsSection;
     this._mainFilmsSection = new MainFilmsSection();
-
     if (oldFilmsSection) {
       replace(this._mainFilmsSection, oldFilmsSection);
     } else {
       render(this._container, this._mainFilmsSection);
     }
 
+    let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
     this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
     this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
     this._topRatedFilmsSection = new TopRatedFilmsSection();
