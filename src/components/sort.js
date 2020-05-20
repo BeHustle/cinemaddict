@@ -22,8 +22,11 @@ export default class Sort extends AbstractComponent {
       .querySelectorAll(`.sort__button`)
       .forEach((button) => {
         button.addEventListener(`click`, (evt) => {
+          const sortType = evt.currentTarget.dataset.sort;
           evt.preventDefault();
-          cb(evt.currentTarget.dataset.sort);
+          if (sortType !== this._activeSort) {
+            cb(sortType);
+          }
         });
       });
   }
