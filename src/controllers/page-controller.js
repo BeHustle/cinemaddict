@@ -5,6 +5,7 @@ import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
 import MoreButton from '../components/more-button';
 import MovieController from './movie-controller';
+import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
@@ -13,10 +14,8 @@ import {
   LOADING_STATE,
   NO_DATA_STATE,
   URL,
-  API_KEY
+  API_KEY,
 } from '../constants';
-
-let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
 
 export default class PageController {
   constructor(moviesModel, container) {
@@ -50,6 +49,15 @@ export default class PageController {
   }
 
   render() {
+    const oldSortComponent = this._sortComponent;
+    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
+
+    if (oldSortComponent) {
+      replace(this._sortComponent, oldSortComponent);
+    } else {
+      render(this._container, this._sortComponent);
+    }
+
     if (this._moviesModel.getState() === LOADING_STATE) {
       this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
       render(this._container, this._mainFilmsSection);
@@ -60,6 +68,7 @@ export default class PageController {
       render(this._container, this._mainFilmsSection);
       return;
     }
+
     const films = this._moviesModel.getMovies();
     const oldFilmsSection = this._mainFilmsSection;
     this._mainFilmsSection = new MainFilmsSection();
@@ -69,12 +78,16 @@ export default class PageController {
       render(this._container, this._mainFilmsSection);
     }
 
+    let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
+    this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
     this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
     this._topRatedFilmsSection = new TopRatedFilmsSection();
     this._moreButton = new MoreButton();
     const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
     const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
     const mainFilms = films.slice(0, showingFilmsCount);
+    this._topRatedFilmsSection = new TopRatedFilmsSection();
+    this._moreButton = new MoreButton();
 
     if (films.length > showingFilmsCount) {
       render(this._mainFilmsSection.getFilmsList(), this._moreButton);
