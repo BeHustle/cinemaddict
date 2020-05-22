@@ -38,28 +38,11 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _createFilmComments() {
-    const commentsCount = this._comments ? this._comments.length : 0;
-    const commentsTemplate = this._comments ? this._comments.reduce((acc, cv) => {
-      const {id, author, text, emoji, date} = cv;
-      return acc + `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
-            </span>
-            <div>
-              <p class="film-details__comment-text">${text}</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
-                <button class="film-details__comment-delete" data-comment="${id}">Delete</button>
-              </p>
-            </div>
-          </li>`;
-    }, ``) : ``;
     return (`<section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._getCountComments()}</span></h3>
 
         <ul class="film-details__comments-list">
-            ${commentsTemplate}
+            ${this._getComments()}
         </ul>
 
         <div class="film-details__new-comment">
@@ -92,6 +75,42 @@ export default class FilmPopup extends AbstractSmartComponent {
           </div>
         </div>
       </section>`);
+  }
+
+  _getCountComments() {
+    return this._comments ? this._comments.length : 0;
+  }
+
+  _getComments() {
+    return this._comments ? this._comments.reduce((acc, cv) => {
+      const {id, author, text, emoji, date} = cv;
+      return acc + `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
+            </span>
+            <div>
+              <p class="film-details__comment-text">${text}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${author}</span>
+                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
+                <button class="film-details__comment-delete" data-comment="${id}">Delete</button>
+              </p>
+            </div>
+          </li>`;
+    }, ``) : ``;
+  }
+
+  updateComments(comments) {
+    this._comments = comments;
+    this
+      .getElement()
+      .querySelector(`.film-details__comments-count`)
+      .innerText = this._getCountComments();
+    this
+      .getElement()
+      .querySelector(`.film-details__comments-list`)
+      .innerHTML = this._getComments();
+    this._recoveryCommentDeleteListener();
   }
 
   getTemplate() {
@@ -183,22 +202,18 @@ export default class FilmPopup extends AbstractSmartComponent {
 
   onClosePopup(cb) {
     this.addCbToClickOnElement(`.film-details__close-btn`, cb);
-    this._closeCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
     this.addCbToClickOnElement(`#watchlist`, cb);
-    this._watchlistCallBack = cb;
   }
 
   onMarkAsWatched(cb) {
     this.addCbToClickOnElement(`#watched`, cb);
-    this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
     this.addCbToClickOnElement(`#favorite`, cb);
-    this._favoriteCallBack = cb;
   }
 
   submitCommentForm(cb) {
@@ -227,7 +242,62 @@ export default class FilmPopup extends AbstractSmartComponent {
       .forEach((btn) => {
         btn.addEventListener(`click`, cb);
       });
-    this._commentDeleteCallback = cb;
+    this._onCommentDeleteCalback = cb;
+  }
+
+  disableForm() {
+    this
+      .getElement()
+      .querySelectorAll(`form input, form textarea`)
+      .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
+  }
+
+  enableForm() {
+    this
+      .getElement()
+      .querySelectorAll(`form input, form textarea`)
+      .forEach((elem) => elem.removeAttribute(`disabled`));
+  }
+
+  clearForm() {
+    this.getElement().querySelector(`form`).reset();
+  }
+
+  shake() {
+    this
+      .getElement()
+      .querySelector(`form`)
+      .classList
+      .add(`shake`);
+    window.setTimeout(this.removeShake.bind(this), 500);
+  }
+
+  setErrorStyle() {
+    this
+      .getElement()
+      .querySelector(`.film-details__comment-input`)
+      .classList
+      .add(`film-details__comment-input--error`);
+  }
+
+  removeErrorStyle() {
+    this
+      .getElement()
+      .querySelector(`.film-details__comment-input`)
+      .classList
+      .remove(`film-details__comment-input--error`);
+  }
+
+  removeShake() {
+    this
+      .getElement()
+      .querySelector(`form`)
+      .classList
+      .remove(`shake`);
+  }
+
+  _recoveryCommentDeleteListener() {
+    this.onCommentDelete(this._onCommentDeleteCalback);
   }
 
   _onEmojiChange(evt) {

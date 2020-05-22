@@ -5,7 +5,7 @@ export default class FooterController {
   constructor(moviesModel, container) {
     this._moviesModel = moviesModel;
     this._container = container;
-    this._moviesModel.onDataChange(this.render.bind(this));
+    this._moviesModel.onDataLoad(this.render.bind(this));
   }
 
   render() {

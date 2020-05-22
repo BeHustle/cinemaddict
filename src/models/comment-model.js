@@ -7,9 +7,11 @@ export default class CommentModel {
     this.date = new Date(data.date);
   }
 
-  toRAW() {
+  static toRAW(data) {
     return {
-
+      "comment": data.text,
+      "emotion": data.emoji,
+      "date": data.date.toJSON()
     };
   }
 
@@ -19,9 +21,5 @@ export default class CommentModel {
 
   static parseComments(data) {
     return data.map(CommentModel.parseComment);
-  }
-
-  static clone(data) {
-    return new CommentModel(data.toRAW());
   }
 }

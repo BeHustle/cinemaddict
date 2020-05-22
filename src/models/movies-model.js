@@ -1,9 +1,11 @@
 import {changeArrayElement} from '../utils/array';
-import {LOADING_STATE, DONE_STATE} from '../constants';
+import {DONE_STATE, LOADING_STATE, NO_DATA_STATE} from '../constants';
 
 export default class MoviesModel {
   constructor() {
-    this._dataObservers = [];
+    this._dataLoadObservers = [];
+    this._filterChangeObservers = [];
+    this._sortChangeObservers = [];
     this._activeFilter = ``;
     this._state = LOADING_STATE;
     this._activeSort = `default`;
@@ -11,16 +13,21 @@ export default class MoviesModel {
 
   setFilter(filter) {
     this._activeFilter = filter;
-    this._dataObservers.forEach((cb) => cb());
+    this._filterChangeObservers.forEach((cb) => cb());
   }
 
   getActiveSort() {
     return this._activeSort;
   }
 
+  setNoData() {
+    this._state = NO_DATA_STATE;
+    this._dataLoadObservers.forEach((cb) => cb());
+  }
+
   updateSort(type) {
     this._activeSort = type;
-    this._dataObservers.forEach((cb) => cb());
+    this._sortChangeObservers.forEach((cb) => cb());
   }
 
   getFilter() {
@@ -31,8 +38,16 @@ export default class MoviesModel {
     return this._state;
   }
 
-  onDataChange(cb) {
-    this._dataObservers.push(cb);
+  onDataLoad(cb) {
+    this._dataLoadObservers.push(cb);
+  }
+
+  onFilterChange(cb) {
+    this._filterChangeObservers.push(cb);
+  }
+
+  onSortChange(cb) {
+    this._sortChangeObservers.push(cb);
   }
 
   _sortMovies(movies) {
@@ -64,7 +79,7 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = movies;
     this._state = DONE_STATE;
-    this._dataObservers.forEach((cb) => cb());
+    this._dataLoadObservers.forEach((cb) => cb());
   }
 
   getMovie(id) {
@@ -78,7 +93,9 @@ export default class MoviesModel {
     if (index === -1) {
       return;
     }
-    const newMovies = changeArrayElement(this._movies, movie, index);
-    this.setMovies(newMovies);
+    this._movies = changeArrayElement(this._movies, movie, index);
+    if (this._activeFilter && !movie[this._activeFilter]) {
+      this._filterChangeObservers.forEach((cb) => cb());
+    }
   }
 }

@@ -22,7 +22,9 @@ export default class PageController {
     this._api = new API(URL, API_KEY);
     this._container = container;
     this._moviesModel = moviesModel;
-    this._moviesModel.onDataChange(this.render.bind(this));
+    this._moviesModel.onDataLoad(this.render.bind(this));
+    this._moviesModel.onFilterChange(this.render.bind(this));
+    this._moviesModel.onSortChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];
@@ -50,6 +52,7 @@ export default class PageController {
 
   render() {
     const oldSortComponent = this._sortComponent;
+    const oldMainFilmsSection = this._mainFilmsSection;
     this._sortComponent = new Sort(this._moviesModel.getActiveSort());
 
     if (oldSortComponent) {
@@ -60,12 +63,20 @@ export default class PageController {
 
     if (this._moviesModel.getState() === LOADING_STATE) {
       this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
-      render(this._container, this._mainFilmsSection);
+      if (oldMainFilmsSection) {
+        replace(this._mainFilmsSection, oldMainFilmsSection);
+      } else {
+        render(this._container, this._mainFilmsSection);
+      }
       return;
     }
-    if (this._moviesModel.getCountMovies() === 0) {
+    if (this._moviesModel.getCountMovies() === 0 || this._moviesModel.getState() === NO_DATA_STATE) {
       this._mainFilmsSection = new MainFilmsSection(NO_DATA_STATE);
-      render(this._container, this._mainFilmsSection);
+      if (oldMainFilmsSection) {
+        replace(this._mainFilmsSection, oldMainFilmsSection);
+      } else {
+        render(this._container, this._mainFilmsSection);
+      }
       return;
     }
 
