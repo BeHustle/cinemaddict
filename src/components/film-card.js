@@ -1,4 +1,5 @@
 import {getFormatDuration} from '../utils/date-time';
+import {descriptionSlice} from '../utils/render';
 import AbstractSmartComponent from './abstract-smart-component';
 
 const CONTROLS_ACTIVE_BTN_CLASS = `film-card__controls-item--active`;
@@ -32,7 +33,7 @@ export default class FilmCard extends AbstractSmartComponent {
             <span class="film-card__genre">${filmGenre}</span>
           </p>
           <img src="${poster}" alt="${title}" class="film-card__poster">
-          <p class="film-card__description">${description}</p>
+          <p class="film-card__description">${descriptionSlice(description)}</p>
           <a class="film-card__comments">${this._countComments}</a>
           <form class="film-card__controls">
             <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${watchlistFilm}">Add to watchlist</button>
