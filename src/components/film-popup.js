@@ -16,9 +16,16 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _createFilmGenres(genres) {
-    return genres.reduce((acc, cv) => {
+    if (genres.length === 0) {
+      return ``;
+    }
+    const genresList = genres.reduce((acc, cv) => {
       return `${acc} <span class="film-details__genre">${cv}</span>`;
     }, ``);
+    return `<tr class="film-details__row">
+      <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+      <td class="film-details__cell">${genresList}</td>
+    </tr>`;
   }
 
   _createFilmControls(isWatched, inWatchlist, isFavorite) {
@@ -178,12 +185,7 @@ export default class FilmPopup extends AbstractSmartComponent {
               <td class="film-details__term">Country</td>
               <td class="film-details__cell">${filmCountries}</td>
             </tr>
-            <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
-              <td class="film-details__cell">
-                ${filmGenresTemplate}
-              </td>
-            </tr>
+           ${filmGenresTemplate}
           </table>
 
           <p class="film-details__film-description">${description}</p>
