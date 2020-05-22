@@ -1,16 +1,16 @@
 import AbstractComponent from './abstract-component';
 
 export default class Footer extends AbstractComponent {
-  constructor(films) {
+  constructor(countFilms) {
     super();
-    this._films = films;
+    this._countFilms = countFilms;
   }
 
   getTemplate() {
-    const countFilms = `<p>${this._films.length} movies inside</p>`;
+    const countFilmsTemplate = `<p>${this._countFilms} movies inside</p>`;
     return `<footer class="footer">
         <section class="footer__logo logo logo--smaller">Cinemaddict</section>
-        <section class="footer__statistics">${countFilms}</section>
+        <section class="footer__statistics">${countFilmsTemplate}</section>
     </footer>`;
   }
 }
