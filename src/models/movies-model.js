@@ -1,5 +1,11 @@
 import {changeArrayElement} from '../utils/array';
-import {DONE_STATE, LOADING_STATE, NO_DATA_STATE} from '../constants';
+import {
+  DONE_STATE,
+  LOADING_STATE,
+  NO_DATA_STATE,
+  MOST_COMMENTED_FILMS_COUNT,
+  TOP_RATED_FILMS_COUNT
+} from '../constants';
 
 export default class MoviesModel {
   constructor() {
@@ -80,6 +86,26 @@ export default class MoviesModel {
     this._movies = movies;
     this._state = DONE_STATE;
     this._dataLoadObservers.forEach((cb) => cb());
+  }
+
+  getTopRatedMovies() {
+    if (!this._movies || this._movies.length === 0) {
+      return null;
+    }
+    if (this._movies.every((movie) => movie.rating === 0)) {
+      return null;
+    }
+    return this._movies.slice().sort((a, b) => b.rating * 10 - a.rating * 10).slice(0, TOP_RATED_FILMS_COUNT);
+  }
+
+  getMostCommentedMovies() {
+    if (!this._movies || this._movies.length === 0) {
+      return null;
+    }
+    if (this._movies.every((movie) => movie.getCommentsCount() === 0)) {
+      return null;
+    }
+    return this._movies.slice().sort((a, b) => b.getCommentsCount() * 10 - a.getCommentsCount() * 10).slice(0, MOST_COMMENTED_FILMS_COUNT);
   }
 
   getMovie(id) {

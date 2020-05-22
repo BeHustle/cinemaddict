@@ -8,7 +8,7 @@ export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._countComments = `${this._film.countComments} comments`;
+    this._countComments = `${this._film.comments.length} comments`;
   }
 
   getTemplate() {
@@ -48,28 +48,24 @@ export default class FilmCard extends AbstractSmartComponent {
     this
       .getElement()
       .querySelector(`.film-card__comments`)
-      .innerText = `${this._film.countComments} comments`;
+      .innerText = `${this._countComments} comments`;
   }
 
   onShowPopup(cb) {
     this.addCbToClickOnElement(`img`, cb);
     this.addCbToClickOnElement(`.film-card__title`, cb);
     this.addCbToClickOnElement(`.film-card__comments`, cb);
-    this._showPopupCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--add-to-watchlist`, cb);
-    this._watchlistCallback = cb;
   }
 
   onMarkAsWatched(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--mark-as-watched`, cb);
-    this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--favorite`, cb);
-    this._favoriteCallBack = cb;
   }
 }

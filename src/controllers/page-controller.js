@@ -9,8 +9,6 @@ import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
-  MOST_COMMENTED_FILMS_COUNT,
-  TOP_RATED_FILMS_COUNT,
   LOADING_STATE,
   NO_DATA_STATE,
   URL,
@@ -35,6 +33,8 @@ export default class PageController {
       const movieController = new MovieController(container, this._onDataChange, this._onViewChange);
       movieController.render(film);
       this._movieControllers.push(movieController);
+      // film._onCommentsUpdate(this.renderMostCommentedFilms.bind(this));
+      // этот код ломает браузер
     });
   }
 
@@ -48,6 +48,32 @@ export default class PageController {
         this._moviesModel.setMovie(film.id, movie);
         controller.render(this._moviesModel.getMovie(newFilm.id));
       });
+  }
+
+  renderMostCommentedFilms() {
+    const mostCommentedFilms = this._moviesModel.getMostCommentedMovies();
+    const oldMostCommentedSection = this._mostCommentedSection;
+    this._mostCommentedSection = new MostCommentedFilmsSection();
+    if (!mostCommentedFilms) {
+      this._mostCommentedSection.getElement().innerHTML = ``;
+    } else {
+      if (oldMostCommentedSection) {
+        replace(this._mostCommentedSection, oldMostCommentedSection);
+      } else {
+        render(this._mainFilmsSection.getElement(), this._mostCommentedSection);
+      }
+      this._renderFilms(mostCommentedFilms, this._mostCommentedSection.getFilmsListContainer());
+    }
+  }
+
+  renderTopRatedFilms() {
+    const topRatedFilms = this._moviesModel.getTopRatedMovies();
+    if (!topRatedFilms) {
+      return;
+    }
+    this._topRatedSection = new TopRatedFilmsSection();
+    render(this._mainFilmsSection.getElement(), this._topRatedSection);
+    this._renderFilms(topRatedFilms, this._topRatedSection.getFilmsListContainer());
   }
 
   render() {
@@ -91,24 +117,18 @@ export default class PageController {
 
     let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
     this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
-    this._mostCommentedFilmsSection = new MostCommentedFilmsSection();
-    this._topRatedFilmsSection = new TopRatedFilmsSection();
     this._moreButton = new MoreButton();
-    const topRatedFilms = films.slice(0, TOP_RATED_FILMS_COUNT);
-    const mostCommentedFilms = films.slice(0, MOST_COMMENTED_FILMS_COUNT);
     const mainFilms = films.slice(0, showingFilmsCount);
-    this._topRatedFilmsSection = new TopRatedFilmsSection();
     this._moreButton = new MoreButton();
 
     if (films.length > showingFilmsCount) {
       render(this._mainFilmsSection.getFilmsList(), this._moreButton);
     }
-    render(this._mainFilmsSection.getElement(), this._mostCommentedFilmsSection);
-    render(this._mainFilmsSection.getElement(), this._topRatedFilmsSection);
 
     this._renderFilms(mainFilms, this._mainFilmsSection.getFilmsListContainer());
-    this._renderFilms(topRatedFilms, this._topRatedFilmsSection.getFilmsListContainer());
-    this._renderFilms(mostCommentedFilms, this._mostCommentedFilmsSection.getFilmsListContainer());
+
+    this.renderTopRatedFilms();
+    this.renderMostCommentedFilms();
 
     const showMoreFilms = (evt) => {
       const prevFilmsCount = showingFilmsCount;
@@ -120,7 +140,6 @@ export default class PageController {
         this._moreButton.getElement().remove();
       }
     };
-
     this._moreButton.onClick(showMoreFilms);
   }
 }

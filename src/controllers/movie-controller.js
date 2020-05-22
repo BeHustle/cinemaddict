@@ -113,8 +113,9 @@ export default class MovieController {
     this._api.getComments(this._film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
+        this._film.setComments(comments);
         this._filmPopup.updateComments(this._commentsModel.getComments());
-        this._filmCard.updateCountComments(this._commentsModel.getCommentsCount());
+        this._filmCard.updateCountComments(this._film.getCommentsCount());
       });
   }
 
@@ -132,7 +133,6 @@ export default class MovieController {
     this._setDataChangeHandlers(this._film, this._filmCard);
     if (oldFilmCard) {
       replace(this._filmCard, oldFilmCard);
-
     } else {
       render(this._container, this._filmCard);
     }

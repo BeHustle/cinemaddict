@@ -20,6 +20,7 @@ export default class MainFilmsSection extends AbstractComponent {
 
   getTemplate() {
     return (`<section class="films">
+<a href="#" id="test">test</a>
       <section class="films-list">
         ${this._getTitle()}
         <div class="films-list__container"></div>

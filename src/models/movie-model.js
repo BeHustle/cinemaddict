@@ -2,7 +2,6 @@ export default class MovieModel {
   constructor(data) {
     this.id = parseInt(data.id, 10);
     this.comments = data.comments;
-    this.countComments = data.comments ? data.comments.length : 0;
 
     this.title = data.film_info.title;
     this.originalTitle = data.film_info.alternative_title;
@@ -22,6 +21,8 @@ export default class MovieModel {
     this.isWatched = data.user_details.already_watched;
     this.inWatchlist = data.user_details.watchlist;
     this.watchingDate = new Date(data.user_details.watching_date);
+
+    this._commentsUpdateObservers = [];
   }
 
   toRAW() {
@@ -52,6 +53,19 @@ export default class MovieModel {
         "watching_date": this.watchingDate.toJSON()
       }
     };
+  }
+
+  setComments(comments) {
+    this.comments = comments;
+    this._commentsUpdateObservers.forEach((cb) => cb());
+  }
+
+  _onCommentsUpdate(cb) {
+    this._commentsUpdateObservers.push(cb);
+  }
+
+  getCommentsCount() {
+    return this.comments.length;
   }
 
   static parseMovie(data) {
