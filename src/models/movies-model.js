@@ -9,9 +9,8 @@ import {
 
 export default class MoviesModel {
   constructor() {
-    this._dataLoadObservers = [];
-    this._filterChangeObservers = [];
-    this._sortChangeObservers = [];
+    this._dataChangeObservers = [];
+    this._movieUpdateFilter = [];
     this._activeFilter = ``;
     this._state = LOADING_STATE;
     this._activeSort = `default`;
@@ -19,7 +18,7 @@ export default class MoviesModel {
 
   setFilter(filter) {
     this._activeFilter = filter;
-    this._filterChangeObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   getActiveSort() {
@@ -28,12 +27,12 @@ export default class MoviesModel {
 
   setNoData() {
     this._state = NO_DATA_STATE;
-    this._dataLoadObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   updateSort(type) {
     this._activeSort = type;
-    this._sortChangeObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   getFilter() {
@@ -44,16 +43,12 @@ export default class MoviesModel {
     return this._state;
   }
 
-  onDataLoad(cb) {
-    this._dataLoadObservers.push(cb);
+  onDataChange(cb) {
+    this._dataChangeObservers.push(cb);
   }
 
-  onFilterChange(cb) {
-    this._filterChangeObservers.push(cb);
-  }
-
-  onSortChange(cb) {
-    this._sortChangeObservers.push(cb);
+  onMovieUpdateFilter(cb) {
+    this._movieUpdateFilter.push(cb);
   }
 
   _sortMovies(movies) {
@@ -85,7 +80,7 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = movies;
     this._state = DONE_STATE;
-    this._dataLoadObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   getTopRatedMovies() {
@@ -121,7 +116,9 @@ export default class MoviesModel {
     }
     this._movies = changeArrayElement(this._movies, movie, index);
     if (this._activeFilter && !movie[this._activeFilter]) {
-      this._filterChangeObservers.forEach((cb) => cb());
+      this._dataChangeObservers.forEach((cb) => cb());
+    } else {
+      this._movieUpdateFilter.forEach((cb) => cb());
     }
   }
 }

@@ -1,11 +1,6 @@
 export default class CommentsModel {
   constructor() {
     this._comments = [];
-    this._dataObservers = [];
-  }
-
-  onDataChange(cb) {
-    this._dataObservers.push(cb);
   }
 
   setComments(comments) {

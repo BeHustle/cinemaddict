@@ -9,16 +9,16 @@ import CommentModel from '../models/comment-model';
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, onCommentsUpdate) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._onCommentsUpdate = onCommentsUpdate;
     this._api = new API(URL, API_KEY);
 
     this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
 
     this._commentsModel = new CommentsModel();
-    this._commentsModel.onDataChange(this.rerender.bind(this));
   }
 
   _changeFlag(film, flag) {
@@ -29,27 +29,22 @@ export default class MovieController {
 
   _setCommentDeleteHandler() {
     this._filmPopup.onCommentDelete((evt) => {
-      evt.preventDefault();
-      this._filmPopup.removeShake();
       const id = parseInt(evt.currentTarget.dataset.comment, 10);
-      const evtInnerText = evt.currentTarget.innerText;
-      evt.currentTarget.innerText = `Deleting...`;
-      evt.currentTarget.setAttribute(`disabled`, `disabled`);
+      this._filmPopup.setCommentDeleting(evt);
       this._api.deleteComment(id)
-        .then(this._updateComments.bind(this))
+        .then(() => {
+          this._updateComments();
+          this._onCommentsUpdate();
+        })
         .catch(() => {
-          evt.target.innerText = evtInnerText;
-          evt.target.removeAttribute(`disabled`);
-          this._filmPopup.shake();
+          this._filmPopup.setErrorDuringDeleting(evt);
         });
     });
   }
 
   _addComment(comment) {
     if (comment.emoji && comment.text) {
-      this._filmPopup.disableForm();
-      this._filmPopup.removeShake();
-      this._filmPopup.removeErrorStyle();
+      this._filmPopup.setCommentAdding();
       const newComment = CommentModel.toRAW({
         text: comment.text,
         emoji: comment.emoji,
@@ -57,12 +52,10 @@ export default class MovieController {
       });
       this._api.addComment(this._film.id, newComment).then(() => {
         this._updateComments();
-        this._filmPopup.clearForm();
-        this._filmPopup.enableForm();
+        this._onCommentsUpdate();
+        this._filmPopup.onSuccessCommentAdd();
       }).catch(() => {
-        this._filmPopup.enableForm();
-        this._filmPopup.shake();
-        this._filmPopup.setErrorStyle();
+        this._filmPopup.onErrorCommentAdd();
       });
     }
   }
@@ -113,7 +106,7 @@ export default class MovieController {
     this._api.getComments(this._film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
-        this._film.setComments(comments);
+        this._film.setComments(comments.map((item) => item.id.toString()));
         this._filmPopup.updateComments(this._commentsModel.getComments());
         this._filmCard.updateCountComments(this._film.getCommentsCount());
       });
@@ -147,9 +140,5 @@ export default class MovieController {
       }
     }
     this._updateComments();
-  }
-
-  rerender() {
-    this.render(this._film);
   }
 }

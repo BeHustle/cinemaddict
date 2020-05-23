@@ -1,6 +1,6 @@
 import {
   getCommentFormatDate,
-  getMonthName,
+  getReleaseDate,
   getFormatDuration,
 } from '../utils/date-time';
 import AbstractSmartComponent from './abstract-smart-component';
@@ -128,7 +128,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
-    const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
     const filmDuration = getFormatDuration(duration);
     const filmCountries = countries.join(`, `);
     const filmGenresTemplate = this._createFilmGenres(genres);
@@ -175,7 +174,7 @@ export default class FilmPopup extends AbstractSmartComponent {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${filmReleaseDate}</td>
+              <td class="film-details__cell">${getReleaseDate(date)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -247,34 +246,47 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._onCommentDeleteCalback = cb;
   }
 
-  disableForm() {
+  setCommentDeleting(evt) {
+    evt.preventDefault();
+    this._removeShake();
+    evt.target.innerText = `Deleting...`;
+    evt.target.setAttribute(`disabled`, `disabled`);
+  }
+
+  setErrorDuringDeleting(evt) {
+    evt.target.innerText = `Delete`;
+    evt.target.removeAttribute(`disabled`);
+    this._shake();
+  }
+
+  _disableForm() {
     this
       .getElement()
       .querySelectorAll(`form input, form textarea`)
       .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
   }
 
-  enableForm() {
+  _enableForm() {
     this
       .getElement()
       .querySelectorAll(`form input, form textarea`)
       .forEach((elem) => elem.removeAttribute(`disabled`));
   }
 
-  clearForm() {
+  _clearForm() {
     this.getElement().querySelector(`form`).reset();
   }
 
-  shake() {
+  _shake() {
     this
       .getElement()
       .querySelector(`form`)
       .classList
       .add(`shake`);
-    window.setTimeout(this.removeShake.bind(this), 500);
+    window.setTimeout(this._removeShake.bind(this), 500);
   }
 
-  setErrorStyle() {
+  _setErrorStyle() {
     this
       .getElement()
       .querySelector(`.film-details__comment-input`)
@@ -282,7 +294,7 @@ export default class FilmPopup extends AbstractSmartComponent {
       .add(`film-details__comment-input--error`);
   }
 
-  removeErrorStyle() {
+  _removeErrorStyle() {
     this
       .getElement()
       .querySelector(`.film-details__comment-input`)
@@ -290,7 +302,28 @@ export default class FilmPopup extends AbstractSmartComponent {
       .remove(`film-details__comment-input--error`);
   }
 
-  removeShake() {
+  setCommentAdding() {
+    this._disableForm();
+    this._removeShake();
+    this._removeErrorStyle();
+  }
+
+  onSuccessCommentAdd() {
+    this._clearForm();
+    this._enableForm();
+    this
+      .getElement()
+      .querySelector(`.film-details__add-emoji-label`)
+      .innerHTML = ``;
+  }
+
+  onErrorCommentAdd() {
+    this._enableForm();
+    this._shake();
+    this._setErrorStyle();
+  }
+
+  _removeShake() {
     this
       .getElement()
       .querySelector(`form`)

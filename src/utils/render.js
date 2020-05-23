@@ -32,7 +32,7 @@ const replace = (newComponent, oldComponent) => {
 
 const descriptionSlice = (string) => {
   return string.length > FILMCARD_DESCRIPTION_LENGTH
-    ? `${string.substr(0, FILMCARD_DESCRIPTION_LENGTH - 1)}...`
+    ? `${string.substr(0, FILMCARD_DESCRIPTION_LENGTH - 1)}…`
     : string;
 };
 
