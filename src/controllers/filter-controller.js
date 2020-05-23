@@ -35,13 +35,21 @@ export default class FilterController extends AbstractComponent {
     ];
   }
 
+  hideFilters() {
+    this._filter.hide();
+  }
+
+  showFilters() {
+    this._filter.show();
+  }
+
   render() {
     const oldFilter = this._filter;
     this._filter = new Filter(this._getFiltersData(), this._moviesModel.getFilter());
     if (oldFilter) {
       replace(this._filter, oldFilter);
     } else {
-      render(this._container, this._filter);
+      render(this._container, this._filter, `afterbegin`);
     }
 
     this._filter.onFilterChange(this._moviesModel.setFilter.bind(this._moviesModel));

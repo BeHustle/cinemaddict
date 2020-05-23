@@ -46,21 +46,17 @@ export default class FilmCard extends AbstractSmartComponent {
     this.addCbToClickOnElement(`img`, cb);
     this.addCbToClickOnElement(`.film-card__title`, cb);
     this.addCbToClickOnElement(`.film-card__comments`, cb);
-    this._showPopupCallBack = cb;
   }
 
   onAddToWatchlist(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--add-to-watchlist`, cb);
-    this._watchlistCallback = cb;
   }
 
   onMarkAsWatched(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--mark-as-watched`, cb);
-    this._watchedCallBack = cb;
   }
 
   onMarkAsFavorite(cb) {
     this.addCbToClickOnElement(`.film-card__controls-item--favorite`, cb);
-    this._favoriteCallBack = cb;
   }
 }

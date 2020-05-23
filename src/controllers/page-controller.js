@@ -3,8 +3,12 @@ import API from '../api';
 import MostCommentedFilmsSection from '../components/most-commented-films-section';
 import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
+import MainMenu from '../components/main-menu';
+import UserProfile from '../components/user-profile';
 import MoreButton from '../components/more-button';
 import MovieController from './movie-controller';
+import FooterController from './footer-controller';
+import FilterController from './filter-controller';
 import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
@@ -16,16 +20,47 @@ import {
   URL,
   API_KEY,
 } from '../constants';
+import StatisticsController from './statistics-controller';
+
+const bodyElement = document.querySelector(`body`);
+const headerElement = document.querySelector(`.header`);
 
 export default class PageController {
   constructor(moviesModel, container) {
     this._api = new API(URL, API_KEY);
     this._container = container;
     this._moviesModel = moviesModel;
-    this._moviesModel.onDataChange(this.render.bind(this));
+    this._moviesModel.onDataChange(this._renderMainContent.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._movieControllers = [];
+  }
+
+  _renderStatistics() {
+    this._statisticsController = new StatisticsController(this._moviesModel, this._container);
+    this._statisticsController.render();
+    this._statisticsShowed = false;
+  }
+
+  _renderUserProfile() {
+    this._userProfile = new UserProfile();
+    render(headerElement, this._userProfile);
+  }
+
+  _renderMenu() {
+    this._mainMenu = new MainMenu();
+    render(this._container, this._mainMenu);
+    this._mainMenu.onStatisticsClick(this._toggleStatistics.bind(this));
+  }
+
+  _renderFilter() {
+    this._filterController = new FilterController(this._moviesModel, this._mainMenu.getElement());
+    this._filterController.render();
+  }
+
+  _renderFooter() {
+    this._footerController = new FooterController(this._moviesModel, bodyElement);
+    this._footerController.render();
   }
 
   _renderFilms(films, container) {
@@ -36,19 +71,7 @@ export default class PageController {
     });
   }
 
-  _onViewChange() {
-    this._movieControllers.forEach((controller) => controller.setDefaultView());
-  }
-
-  _onDataChange(controller, film, newFilm) {
-    this._api.updateMovie(film.id, newFilm)
-      .then((movie) => {
-        this._moviesModel.setMovie(film.id, movie);
-        controller.render(this._moviesModel.getMovie(newFilm.id));
-      });
-  }
-
-  render() {
+  _renderMainContent() {
     const oldSortComponent = this._sortComponent;
     this._sortComponent = new Sort(this._moviesModel.getActiveSort());
 
@@ -111,5 +134,46 @@ export default class PageController {
     };
 
     this._moreButton.onClick(showMoreFilms);
+  }
+
+  _onViewChange() {
+    this._movieControllers.forEach((controller) => controller.setDefaultView());
+  }
+
+  _onDataChange(controller, film, newFilm) {
+    this._api.updateMovie(film.id, newFilm)
+      .then((movie) => {
+        this._moviesModel.setMovie(film.id, movie);
+        controller.render(this._moviesModel.getMovie(newFilm.id));
+      });
+  }
+
+  _toggleStatistics(evt) {
+    evt.preventDefault();
+    if (this._statisticsShowed) {
+      this._renderMainContent();
+      this._mainFilmsSection.show();
+      this._sortComponent.show();
+      this._filterController.showFilters();
+      this._statisticsController.hideStatistics();
+      this._statisticsShowed = false;
+    } else {
+      this._mainFilmsSection.hide();
+      this._sortComponent.hide();
+      this._filterController.hideFilters();
+      this._statisticsController.showStatistics();
+      this._statisticsShowed = true;
+    }
+  }
+
+  render() {
+    this._renderUserProfile();
+    this._renderMenu();
+    this._renderFilter();
+
+    this._renderMainContent();
+
+    this._renderStatistics();
+    this._renderFooter();
   }
 }

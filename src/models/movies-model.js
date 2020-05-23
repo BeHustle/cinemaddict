@@ -81,4 +81,11 @@ export default class MoviesModel {
     const newMovies = changeArrayElement(this._movies, movie, index);
     this.setMovies(newMovies);
   }
+
+  getWatchedMoviesFromDate(date) {
+    if (!this._movies) {
+      return [];
+    }
+    return this._movies.slice().filter((movie) => movie.isWatched && (movie.watchingDate.getTime() > date.getTime()));
+  }
 }
