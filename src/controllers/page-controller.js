@@ -23,12 +23,13 @@ export default class PageController {
     this._moviesModel.onDataChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onCommentsUpdate = this._onCommentsUpdate.bind(this)
     this._movieControllers = [];
   }
 
   _renderFilms(films, container) {
     films.forEach((film) => {
-      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this.onCommentsUpdate.bind(this));
+      const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._onCommentsUpdate);
       movieController.render(film);
       this._movieControllers.push(movieController);
     });
@@ -52,7 +53,7 @@ export default class PageController {
     this._mostCommentedSection.clear();
   }
 
-  onCommentsUpdate() {
+  _onCommentsUpdate() {
     const mostCommentedFilms = this._moviesModel.getMostCommentedMovies();
     this._mostCommentedSection.clear();
     if (mostCommentedFilms) {
@@ -126,7 +127,7 @@ export default class PageController {
 
     this.renderTopRatedFilms();
     this.renderMostCommentedSection();
-    this.onCommentsUpdate();
+    this._onCommentsUpdate();
 
     const showMoreFilms = (evt) => {
       const prevFilmsCount = showingFilmsCount;
