@@ -23,7 +23,7 @@ export default class PageController {
     this._moviesModel.onDataChange(this.render.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
-    this._onCommentsUpdate = this._onCommentsUpdate.bind(this)
+    this._onCommentsUpdate = this._onCommentsUpdate.bind(this);
     this._movieControllers = [];
   }
 
