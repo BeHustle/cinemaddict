@@ -155,13 +155,13 @@ export default class PageController {
       this._mainFilmsSection.show();
       this._sortComponent.show();
       this._filterController.showFilters();
-      this._statisticsController.hideStatistics();
+      this._statisticsController.setHidden();
       this._statisticsShowed = false;
     } else {
       this._mainFilmsSection.hide();
       this._sortComponent.hide();
       this._filterController.hideFilters();
-      this._statisticsController.showStatistics();
+      this._statisticsController.setShown();
       this._statisticsShowed = true;
     }
   }
