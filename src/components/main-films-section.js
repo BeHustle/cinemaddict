@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component';
+import {NO_DATA_STATE, LOADING_STATE} from '../constants';
 
 export default class MainFilmsSection extends AbstractComponent {
   constructor(dataState) {
@@ -8,9 +9,9 @@ export default class MainFilmsSection extends AbstractComponent {
 
   _getTitle() {
     switch (this._dataState) {
-      case `loading`:
+      case LOADING_STATE:
         return `<h2 class="films-list__title">Loading...</h2>`;
-      case `no-data`:
+      case NO_DATA_STATE:
         return `<h2 class="films-list__title">There are no movies in our database</h2>`;
       default:
         return `<h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>`;

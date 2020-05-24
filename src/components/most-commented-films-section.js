@@ -13,4 +13,8 @@ export default class MostCommentedFilmsSection extends AbstractComponent {
   getFilmsListContainer() {
     return this.getElement().querySelector(`.films-list__container`);
   }
+
+  clear() {
+    this.getElement().innerHTML = ``;
+  }
 }

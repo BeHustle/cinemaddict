@@ -1,3 +1,5 @@
+import {FILMCARD_DESCRIPTION_LENGTH} from '../constants';
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -28,4 +30,10 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
-export {createElement, render, replace};
+const descriptionSlice = (string) => {
+  return string.length > FILMCARD_DESCRIPTION_LENGTH
+    ? `${string.substr(0, FILMCARD_DESCRIPTION_LENGTH - 1)}…`
+    : string;
+};
+
+export {createElement, render, replace, descriptionSlice};
