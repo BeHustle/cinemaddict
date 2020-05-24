@@ -26,6 +26,19 @@ export default class API {
       .then(CommentModel.parseComments);
   }
 
+  deleteComment(id) {
+    return this._load({path: `comments/${id}`, method: Method.DELETE});
+  }
+
+  addComment(filmId, data) {
+    return this._load({
+      path: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    });
+  }
+
   updateMovie(id, data) {
     return this._load({
       path: `movies/${id}`,

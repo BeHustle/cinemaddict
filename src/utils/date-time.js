@@ -1,5 +1,6 @@
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format';
+
 momentDurationFormatSetup(moment);
 
 const getFormatDuration = (duration) => {
@@ -14,4 +15,4 @@ const getCommentFormatDate = (date) => {
   return moment(date).fromNow();
 };
 
-export {getReleaseDate, getFormatDuration, getCommentFormatDate};
+export {getFormatDuration, getReleaseDate, getCommentFormatDate};

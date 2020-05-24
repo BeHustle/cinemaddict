@@ -32,6 +32,8 @@ render(mainElement, statistics);
 
 api.getMovies().then((movies) =>{
   moviesModel.setMovies(movies);
+}).catch(() => {
+  moviesModel.setNoData();
 });
 
 
