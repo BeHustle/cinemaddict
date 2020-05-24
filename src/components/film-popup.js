@@ -19,7 +19,7 @@ export default class FilmPopup extends AbstractSmartComponent {
     if (genres.length === 0) {
       return ``;
     }
-    const genresList = genres.reduce((acc, cv) => {
+    return genres.reduce((acc, cv) => {
       return `${acc} <span class="film-details__genre">${cv}</span>`;
     }, ``);
   }
@@ -41,23 +41,6 @@ export default class FilmPopup extends AbstractSmartComponent {
   }
 
   _createFilmComments() {
-    const commentsCount = this._comments ? this._comments.length : 0;
-    const commentsTemplate = this._comments ? this._comments.reduce((acc, cv) => {
-      const {id, author, text, emoji, date} = cv;
-      return acc + `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
-            </span>
-            <div>
-              <p class="film-details__comment-text">${text}</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${getCommentFormatDate(date)}</span>
-                <button class="film-details__comment-delete" data-comment="${id}">Delete</button>
-              </p>
-            </div>
-          </li>`;
-    }, ``) : ``;
     return (`<section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._getCountComments()}</span></h3>
 
@@ -141,7 +124,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     } = this._film;
     const filmWriters = writers.join(`, `);
     const filmActors = actors.join(`, `);
-    const filmReleaseDate = `${date.getDate()} ${getMonthName(date)} ${date.getFullYear()}`;
     const filmDuration = getFormatDuration(duration);
     const filmCountries = countries.join(`, `);
     const filmGenresTemplate = this._createFilmGenres(genres);
