@@ -15,6 +15,8 @@ pageController.render();
 
 api.getMovies().then((movies) =>{
   moviesModel.setMovies(movies);
+}).catch(() => {
+  moviesModel.setNoData();
 });
 
 

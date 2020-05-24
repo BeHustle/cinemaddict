@@ -7,16 +7,16 @@ const getFormatDuration = (duration) => {
   return moment.duration(duration, `minutes`).format(`h[h] m[m]`);
 };
 
-const getStatisticsFormatDuration = (duration) => {
-  return JSON.parse(moment.duration(duration, `minutes`).format(`{["h"]:h, ["m"]:m}`));
-};
-
 const getReleaseDate = (date) => {
   return moment(date).format(`DD MMMM YYYY`);
 };
 
 const getCommentFormatDate = (date) => {
   return moment(date).fromNow();
+};
+
+const getStatisticsFormatDuration = (duration) => {
+  return JSON.parse(moment.duration(duration, `minutes`).format(`{["h"]:h, ["m"]:m}`));
 };
 
 export {getStatisticsFormatDuration, getFormatDuration, getReleaseDate, getCommentFormatDate};

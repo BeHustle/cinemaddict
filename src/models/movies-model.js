@@ -1,9 +1,16 @@
 import {changeArrayElement} from '../utils/array';
-import {LOADING_STATE, DONE_STATE} from '../constants';
+import {
+  DONE_STATE,
+  LOADING_STATE,
+  NO_DATA_STATE,
+  MOST_COMMENTED_FILMS_COUNT,
+  TOP_RATED_FILMS_COUNT
+} from '../constants';
 
 export default class MoviesModel {
   constructor() {
-    this._dataObservers = [];
+    this._dataChangeObservers = [];
+    this._movieUpdateFilter = [];
     this._activeFilter = ``;
     this._state = LOADING_STATE;
     this._activeSort = `default`;
@@ -11,16 +18,21 @@ export default class MoviesModel {
 
   setFilter(filter) {
     this._activeFilter = filter;
-    this._dataObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   getActiveSort() {
     return this._activeSort;
   }
 
+  setNoData() {
+    this._state = NO_DATA_STATE;
+    this._dataChangeObservers.forEach((cb) => cb());
+  }
+
   updateSort(type) {
     this._activeSort = type;
-    this._dataObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
   }
 
   getFilter() {
@@ -32,7 +44,11 @@ export default class MoviesModel {
   }
 
   onDataChange(cb) {
-    this._dataObservers.push(cb);
+    this._dataChangeObservers.push(cb);
+  }
+
+  onMovieUpdateFilter(cb) {
+    this._movieUpdateFilter.push(cb);
   }
 
   _sortMovies(movies) {
@@ -64,7 +80,27 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = movies;
     this._state = DONE_STATE;
-    this._dataObservers.forEach((cb) => cb());
+    this._dataChangeObservers.forEach((cb) => cb());
+  }
+
+  getTopRatedMovies() {
+    if (!this._movies || this._movies.length === 0) {
+      return null;
+    }
+    if (this._movies.every((movie) => movie.rating === 0)) {
+      return null;
+    }
+    return this._movies.slice().sort((a, b) => b.rating * 10 - a.rating * 10).slice(0, TOP_RATED_FILMS_COUNT);
+  }
+
+  getMostCommentedMovies() {
+    if (!this._movies || this._movies.length === 0) {
+      return null;
+    }
+    if (this._movies.every((movie) => movie.getCommentsCount() === 0)) {
+      return null;
+    }
+    return this._movies.slice().sort((a, b) => b.getCommentsCount() * 10 - a.getCommentsCount() * 10).slice(0, MOST_COMMENTED_FILMS_COUNT);
   }
 
   getMovie(id) {
@@ -78,8 +114,12 @@ export default class MoviesModel {
     if (index === -1) {
       return;
     }
-    const newMovies = changeArrayElement(this._movies, movie, index);
-    this.setMovies(newMovies);
+    this._movies = changeArrayElement(this._movies, movie, index);
+    if (this._activeFilter && !movie[this._activeFilter]) {
+      this._dataChangeObservers.forEach((cb) => cb());
+    } else {
+      this._movieUpdateFilter.forEach((cb) => cb());
+    }
   }
 
   getWatchedMoviesFromDate(date) {
