@@ -25,11 +25,12 @@ export default class Statistics extends AbstractComponent {
     const topGenre = this._data.genres.length ? this._data.genres[0].name : ``;
     const duration = getStatisticsFormatDuration(this._data.duration);
     const filters = this._getFilters();
+    const rank = this._data.rank;
     return (`<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Sci-Fighter</span>
+      <span class="statistic__rank-label">${rank}</span>
     </p>
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">

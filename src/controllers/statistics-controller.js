@@ -19,6 +19,7 @@ export default class StatisticsController {
       genres: [],
       countMovies: movies.length,
       duration: movies.length ? movies.reduce((acc, cv) => acc + cv.duration, 0) : 0,
+      rank: this._moviesModel.getUserRank()
     };
     for (const movie of movies) {
       if (movie.genres) {
@@ -105,6 +106,9 @@ export default class StatisticsController {
 
   setShown() {
     this._state = `shown`;
+    this._statisticsDate = new Date(0);
+    this._activeFilter = `all-time`;
+    this.render();
     this._statistics.show();
   }
 }

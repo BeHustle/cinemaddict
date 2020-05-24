@@ -42,8 +42,13 @@ export default class PageController {
   }
 
   _renderUserProfile() {
-    this._userProfile = new UserProfile();
-    render(headerElement, this._userProfile);
+    const oldUserProfile = this._userProfile;
+    this._userProfile = new UserProfile(this._moviesModel.getUserRank());
+    if (oldUserProfile) {
+      replace(this._userProfile, oldUserProfile);
+    } else {
+      render(headerElement, this._userProfile);
+    }
   }
 
   _renderMenu() {
@@ -62,6 +67,17 @@ export default class PageController {
     this._footerController.render();
   }
 
+  _renderSortComponent() {
+    const oldSortComponent = this._sortComponent;
+    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
+
+    if (oldSortComponent) {
+      replace(this._sortComponent, oldSortComponent);
+    } else {
+      render(this._container, this._sortComponent);
+    }
+  }
+
   _renderFilms(films, container) {
     films.forEach((film) => {
       const movieController = new MovieController(container, this._onDataChange, this._onViewChange, this._onCommentsUpdate);
@@ -74,11 +90,12 @@ export default class PageController {
     this._movieControllers.forEach((controller) => controller.setDefaultView());
   }
 
-  _onDataChange(controller, film, newFilm) {
+  _onDataChange(controller, film, newFilm, flag) {
     this._api.updateMovie(film.id, newFilm)
       .then((movie) => {
-        this._moviesModel.setMovie(film.id, movie);
+        this._moviesModel.setMovie(film.id, movie, flag);
         controller.render(this._moviesModel.getMovie(newFilm.id));
+        this._renderUserProfile();
       });
   }
 
@@ -110,20 +127,14 @@ export default class PageController {
   }
 
   _renderMainContent() {
-    const oldSortComponent = this._sortComponent;
-    const oldMainFilmsSection = this._mainFilmsSection;
-    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
-
-    if (oldSortComponent) {
-      replace(this._sortComponent, oldSortComponent);
-    } else {
-      render(this._container, this._sortComponent);
-    }
-
+    this._renderUserProfile();
+    this._renderSortComponent();
+    const oldFilmsSection = this._mainFilmsSection;
+    this._mainFilmsSection = new MainFilmsSection();
     if (this._moviesModel.getState() === LOADING_STATE) {
       this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
-      if (oldMainFilmsSection) {
-        replace(this._mainFilmsSection, oldMainFilmsSection);
+      if (oldFilmsSection) {
+        replace(this._mainFilmsSection, oldFilmsSection);
       } else {
         render(this._container, this._mainFilmsSection);
       }
@@ -131,23 +142,20 @@ export default class PageController {
     }
     if (this._moviesModel.getCountMovies() === 0 || this._moviesModel.getState() === NO_DATA_STATE) {
       this._mainFilmsSection = new MainFilmsSection(NO_DATA_STATE);
-      if (oldMainFilmsSection) {
-        replace(this._mainFilmsSection, oldMainFilmsSection);
+      if (oldFilmsSection) {
+        replace(this._mainFilmsSection, oldFilmsSection);
       } else {
         render(this._container, this._mainFilmsSection);
       }
       return;
     }
-
-    const films = this._moviesModel.getMovies();
-    const oldFilmsSection = this._mainFilmsSection;
-    this._mainFilmsSection = new MainFilmsSection();
     if (oldFilmsSection) {
       replace(this._mainFilmsSection, oldFilmsSection);
     } else {
       render(this._container, this._mainFilmsSection);
     }
 
+    const films = this._moviesModel.getMovies();
     let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
     this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
     this._moreButton = new MoreButton();
@@ -175,6 +183,8 @@ export default class PageController {
       }
     };
     this._moreButton.onClick(showMoreFilms);
+    this._statisticsController.setHidden();
+    this._statisticsShowed = false;
   }
 
   _toggleStatistics(evt) {
@@ -183,13 +193,11 @@ export default class PageController {
       this._renderMainContent();
       this._mainFilmsSection.show();
       this._sortComponent.show();
-      this._filterController.showFilters();
       this._statisticsController.setHidden();
       this._statisticsShowed = false;
     } else {
       this._mainFilmsSection.hide();
       this._sortComponent.hide();
-      this._filterController.hideFilters();
       this._statisticsController.setShown();
       this._statisticsShowed = true;
     }

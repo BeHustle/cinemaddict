@@ -24,7 +24,7 @@ export default class MovieController {
   _changeFlag(film, flag) {
     const newFilm = MovieModel.clone(film);
     newFilm[flag] = !newFilm[flag];
-    this._onDataChange(this, film, newFilm);
+    this._onDataChange(this, film, newFilm, flag);
   }
 
   _setCommentDeleteHandler() {

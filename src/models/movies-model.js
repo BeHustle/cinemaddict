@@ -108,14 +108,14 @@ export default class MoviesModel {
     return this._movies[index];
   }
 
-  setMovie(id, movie) {
+  setMovie(id, movie, flag) {
     const index = this._movies.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return;
     }
     this._movies = changeArrayElement(this._movies, movie, index);
-    if (this._activeFilter && !movie[this._activeFilter]) {
+    if (this._activeFilter === flag) {
       this._dataChangeObservers.forEach((cb) => cb());
     } else {
       this._movieUpdateFilter.forEach((cb) => cb());
@@ -127,5 +127,21 @@ export default class MoviesModel {
       return [];
     }
     return this._movies.slice().filter((movie) => movie.isWatched && (movie.watchingDate.getTime() > date.getTime()));
+  }
+
+  getUserRank() {
+    if (!this._movies) {
+      return ``;
+    }
+    const showedFilmsCount = this._movies.slice().filter((movie) => movie.isWatched).length;
+    if (showedFilmsCount > 0 && showedFilmsCount < 11) {
+      return `Novice`;
+    } else if (showedFilmsCount > 10 && showedFilmsCount < 21) {
+      return `Fan`;
+    } else if (showedFilmsCount > 21) {
+      return `Movie buff`;
+    } else {
+      return ``;
+    }
   }
 }
