@@ -18,5 +18,3 @@ api.getMovies().then((movies) =>{
 }).catch(() => {
   moviesModel.setNoData();
 });
-
-

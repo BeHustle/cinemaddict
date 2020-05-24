@@ -109,7 +109,6 @@ export default class PageController {
     this._renderFilms(topRatedFilms, this._topRatedSection.getFilmsListContainer());
   }
 
-  render() {
   _renderMainContent() {
     const oldSortComponent = this._sortComponent;
     const oldMainFilmsSection = this._mainFilmsSection;
@@ -176,18 +175,6 @@ export default class PageController {
       }
     };
     this._moreButton.onClick(showMoreFilms);
-  }
-
-  _onViewChange() {
-    this._movieControllers.forEach((controller) => controller.setDefaultView());
-  }
-
-  _onDataChange(controller, film, newFilm) {
-    this._api.updateMovie(film.id, newFilm)
-      .then((movie) => {
-        this._moviesModel.setMovie(film.id, movie);
-        controller.render(this._moviesModel.getMovie(newFilm.id));
-      });
   }
 
   _toggleStatistics(evt) {
