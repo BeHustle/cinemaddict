@@ -9,7 +9,7 @@ export default class StatisticsController {
     this._moviesModel.onDataChange(this.render.bind(this));
     this._statisticsDate = new Date(0);
     this._activeFilter = `all-time`;
-    this._state = `hidden`;
+    this.isHidden = true;
   }
 
   _getStatisticsData() {
@@ -65,7 +65,7 @@ export default class StatisticsController {
       this._statistics.renderChart();
     }
     this._statistics.onFilterChange(this._updateStatisticsDate.bind(this));
-    if (this._state === `hidden`) {
+    if (this.isHidden) {
       this._statistics.hide();
     }
   }
@@ -100,12 +100,12 @@ export default class StatisticsController {
   }
 
   setHidden() {
-    this._state = `hidden`;
+    this.isHidden = true;
     this._statistics.hide();
   }
 
   setShown() {
-    this._state = `shown`;
+    this.isHidden = false;
     this._statisticsDate = new Date(0);
     this._activeFilter = `all-time`;
     this.render();

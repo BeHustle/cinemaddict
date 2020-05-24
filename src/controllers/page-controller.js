@@ -38,7 +38,6 @@ export default class PageController {
   _renderStatistics() {
     this._statisticsController = new StatisticsController(this._moviesModel, this._container);
     this._statisticsController.render();
-    this._statisticsShowed = false;
   }
 
   _renderUserProfile() {
@@ -184,22 +183,20 @@ export default class PageController {
     };
     this._moreButton.onClick(showMoreFilms);
     this._statisticsController.setHidden();
-    this._statisticsShowed = false;
+  }
+
+  _hideMainContent() {
+    this._mainFilmsSection.hide();
+    this._sortComponent.hide();
   }
 
   _toggleStatistics(evt) {
     evt.preventDefault();
-    if (this._statisticsShowed) {
-      this._renderMainContent();
-      this._mainFilmsSection.show();
-      this._sortComponent.show();
-      this._statisticsController.setHidden();
-      this._statisticsShowed = false;
-    } else {
-      this._mainFilmsSection.hide();
-      this._sortComponent.hide();
+    if (this._statisticsController.isHidden) {
       this._statisticsController.setShown();
-      this._statisticsShowed = true;
+      this._hideMainContent();
+    } else {
+      this._renderMainContent();
     }
   }
 

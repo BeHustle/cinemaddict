@@ -4,6 +4,32 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getStatisticsFormatDuration} from '../utils/date-time';
 
 const BAR_HEIGHT = 50;
+const CHART_CONFIG = {
+  type: `horizontalBar`,
+  backgroundColor: `#ffe800`,
+  hoverBackgroundColor: `#ffe800`,
+  anchor: `start`,
+  align: `start`,
+  offset: 40,
+  fontColor: `#ffffff`,
+  fontSize: 20,
+  padding: 100,
+  gridLines: {
+    display: false,
+    drawBorder: false,
+  },
+  ticks: {
+    display: false,
+    beginAtZero: true,
+  },
+  legend: {
+    display: false,
+  },
+  tooltips: {
+    enabled: false,
+  },
+  barThickness: 24
+};
 
 export default class Statistics extends AbstractComponent {
   constructor(data, filtersData, activeFilter) {
@@ -65,58 +91,45 @@ export default class Statistics extends AbstractComponent {
     chartElement.height = BAR_HEIGHT * genres.size;
     return new Chart(chartElement, {
       plugins: [ChartDataLabels],
-      type: `horizontalBar`,
+      type: CHART_CONFIG.type,
       data: {
         labels: [...genres.keys()],
         datasets: [{
           data: [...genres.values()],
-          backgroundColor: `#ffe800`,
-          hoverBackgroundColor: `#ffe800`,
-          anchor: `start`,
+          backgroundColor: CHART_CONFIG.backgroundColor,
+          hoverBackgroundColor: CHART_CONFIG.hoverBackgroundColor,
+          anchor: CHART_CONFIG.anchor,
         }],
       },
       options: {
         plugins: {
           datalabels: {
             font: {
-              size: 20,
+              size: CHART_CONFIG.fontSize,
             },
-            color: `#ffffff`,
-            anchor: `start`,
-            align: `start`,
-            offset: 40,
+            color: CHART_CONFIG.fontColor,
+            anchor: CHART_CONFIG.anchor,
+            align: CHART_CONFIG.align,
+            offset: CHART_CONFIG.offset,
           },
         },
         scales: {
           yAxes: [{
             ticks: {
-              fontColor: `#ffffff`,
-              padding: 100,
-              fontSize: 20,
+              fontColor: CHART_CONFIG.fontColor,
+              padding: CHART_CONFIG.padding,
+              fontSize: CHART_CONFIG.fontSize,
             },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
-            barThickness: 24,
+            gridLines: CHART_CONFIG.gridLines,
+            barThickness: CHART_CONFIG.barThickness,
           }],
           xAxes: [{
-            ticks: {
-              display: false,
-              beginAtZero: true,
-            },
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            },
+            ticks: CHART_CONFIG.ticks,
+            gridLines: CHART_CONFIG.gridLines,
           }],
         },
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-        },
+        legend: CHART_CONFIG.legend,
+        tooltips: CHART_CONFIG.tooltips,
       },
     });
   }

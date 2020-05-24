@@ -126,14 +126,14 @@ export default class MoviesModel {
     if (!this._movies) {
       return [];
     }
-    return this._movies.slice().filter((movie) => movie.isWatched && (movie.watchingDate.getTime() > date.getTime()));
+    return this._movies.filter((movie) => movie.isWatched && (movie.watchingDate.getTime() >= date.getTime()));
   }
 
   getUserRank() {
     if (!this._movies) {
       return ``;
     }
-    const showedFilmsCount = this._movies.slice().filter((movie) => movie.isWatched).length;
+    const showedFilmsCount = this._movies.filter((movie) => movie.isWatched).length;
     if (showedFilmsCount > 0 && showedFilmsCount < 11) {
       return `Novice`;
     } else if (showedFilmsCount > 10 && showedFilmsCount < 21) {
