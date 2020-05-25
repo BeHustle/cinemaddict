@@ -4,7 +4,8 @@ import {
   LOADING_STATE,
   NO_DATA_STATE,
   MOST_COMMENTED_FILMS_COUNT,
-  TOP_RATED_FILMS_COUNT
+  TOP_RATED_FILMS_COUNT,
+  SORT
 } from '../constants';
 
 export default class MoviesModel {
@@ -25,7 +26,7 @@ export default class MoviesModel {
   }
 
   setDefaultSort() {
-    this._activeSort = `default`;
+    this._activeSort = SORT.BY_DEFAULT;
   }
 
   setNoData() {
@@ -56,9 +57,9 @@ export default class MoviesModel {
 
   _sortMovies(movies) {
     switch (this._activeSort) {
-      case `date`:
+      case SORT.BY_DATE:
         return movies.sort((a, b) => b.date.getTime() - a.date.getTime());
-      case `rating`:
+      case SORT.BY_RATING:
         return movies.sort((a, b) => b.rating * 10 - a.rating * 10);
       default:
         return movies.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
@@ -140,14 +141,12 @@ export default class MoviesModel {
       return ``;
     }
     const showedFilmsCount = this._movies.filter((movie) => movie.isWatched).length;
-    if (showedFilmsCount > 0 && showedFilmsCount < 11) {
+    if (showedFilmsCount < 11) {
       return `Novice`;
-    } else if (showedFilmsCount > 10 && showedFilmsCount < 21) {
-      return `Fan`;
-    } else if (showedFilmsCount > 21) {
-      return `Movie buff`;
-    } else {
-      return ``;
     }
+    if (showedFilmsCount < 21) {
+      return `Fan`;
+    }
+    return `Movie buff`;
   }
 }

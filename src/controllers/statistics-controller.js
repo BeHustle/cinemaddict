@@ -12,12 +12,12 @@ const PERIOD_FILTERS = {
 const addFilter = (name, date) => {
   return {name, date};
 };
-const FiltersData = new Map();
-FiltersData.set(PERIOD_FILTERS.ALL, addFilter(`All time`, new Date(0)));
-FiltersData.set(PERIOD_FILTERS.TODAY, addFilter(`Today`, moment().startOf(`day`).toDate()));
-FiltersData.set(PERIOD_FILTERS.WEEK, addFilter(`Week`, moment().startOf(`week`).toDate()));
-FiltersData.set(PERIOD_FILTERS.MONTH, addFilter(`Month`, moment().startOf(`month`).toDate()));
-FiltersData.set(PERIOD_FILTERS.YEAR, addFilter(`Year`, moment().startOf(`year`).toDate()));
+const filtersData = new Map();
+filtersData.set(PERIOD_FILTERS.ALL, addFilter(`All time`, new Date(0)));
+filtersData.set(PERIOD_FILTERS.TODAY, addFilter(`Today`, moment().startOf(`day`).toDate()));
+filtersData.set(PERIOD_FILTERS.WEEK, addFilter(`Week`, moment().startOf(`week`).toDate()));
+filtersData.set(PERIOD_FILTERS.MONTH, addFilter(`Month`, moment().startOf(`month`).toDate()));
+filtersData.set(PERIOD_FILTERS.YEAR, addFilter(`Year`, moment().startOf(`year`).toDate()));
 
 export default class StatisticsController {
   constructor(moviesModel, container) {
@@ -28,7 +28,7 @@ export default class StatisticsController {
   }
 
   _getStatisticsData() {
-    const movies = this._moviesModel.getWatchedMoviesFromDate(FiltersData.get(this._activeFilter).date);
+    const movies = this._moviesModel.getWatchedMoviesFromDate(filtersData.get(this._activeFilter).date);
     const genres = new Map();
     const statisticsData = {
       genres: [],
@@ -63,7 +63,7 @@ export default class StatisticsController {
     }
     const oldStatistics = this._statistics;
     const statisticsData = this._getStatisticsData();
-    this._statistics = new Statistics(statisticsData, FiltersData, this._activeFilter);
+    this._statistics = new Statistics(statisticsData, filtersData, this._activeFilter);
     if (oldStatistics) {
       replace(this._statistics, oldStatistics);
     } else {
