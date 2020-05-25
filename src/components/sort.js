@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component';
+import {SORT} from '../constants';
 
 const ACTIVE_SORT_CLASS = `sort__button--active`;
 
@@ -10,7 +11,7 @@ export default class Sort extends AbstractComponent {
 
   getTemplate() {
     const initialSort = ``;
-    const sorts = [`default`, `date`, `rating`].reduce((acc, cv) => {
+    const sorts = [SORT.BY_DEFAULT, SORT.BY_DATE, SORT.BY_RATING].reduce((acc, cv) => {
       return `${acc} <li><a href="#" data-sort="${cv}" class="sort__button ${cv === this._activeSort ? ACTIVE_SORT_CLASS : ``}">Sort by ${cv}</a></li>`;
     }, initialSort);
     return (`<ul class="sort">${sorts}</ul>`);

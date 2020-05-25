@@ -43,7 +43,7 @@ export default class FilterController extends AbstractComponent {
     if (oldFilter) {
       replace(this._filter, oldFilter);
     } else {
-      render(this._container, this._filter);
+      render(this._container, this._filter, `afterbegin`);
     }
 
     this._filter.onFilterChange(this._moviesModel.setFilter.bind(this._moviesModel));

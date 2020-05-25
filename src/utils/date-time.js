@@ -15,4 +15,8 @@ const getCommentFormatDate = (date) => {
   return moment(date).fromNow();
 };
 
-export {getFormatDuration, getReleaseDate, getCommentFormatDate};
+const getStatisticsFormatDuration = (duration) => {
+  return JSON.parse(moment.duration(duration, `minutes`).format(`{["h"]:h, ["m"]:m}`));
+};
+
+export {getStatisticsFormatDuration, getFormatDuration, getReleaseDate, getCommentFormatDate};

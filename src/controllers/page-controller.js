@@ -3,8 +3,12 @@ import API from '../api';
 import MostCommentedFilmsSection from '../components/most-commented-films-section';
 import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
+import MainMenu from '../components/main-menu';
+import UserProfile from '../components/user-profile';
 import MoreButton from '../components/more-button';
 import MovieController from './movie-controller';
+import FooterController from './footer-controller';
+import FilterController from './filter-controller';
 import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
@@ -14,17 +18,63 @@ import {
   URL,
   API_KEY,
 } from '../constants';
+import StatisticsController from './statistics-controller';
+
+const bodyElement = document.querySelector(`body`);
+const headerElement = document.querySelector(`.header`);
 
 export default class PageController {
   constructor(moviesModel, container) {
     this._api = new API(URL, API_KEY);
     this._container = container;
     this._moviesModel = moviesModel;
-    this._moviesModel.onDataChange(this.render.bind(this));
+    this._moviesModel.onDataChange(this._renderMainContent.bind(this));
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onCommentsUpdate = this._onCommentsUpdate.bind(this);
     this._movieControllers = [];
+  }
+
+  _renderStatistics() {
+    this._statisticsController = new StatisticsController(this._moviesModel, this._container);
+    this._statisticsController.render();
+  }
+
+  _renderUserProfile() {
+    const oldUserProfile = this._userProfile;
+    this._userProfile = new UserProfile(this._moviesModel.getUserRank());
+    if (oldUserProfile) {
+      replace(this._userProfile, oldUserProfile);
+    } else {
+      render(headerElement, this._userProfile);
+    }
+  }
+
+  _renderMenu() {
+    this._mainMenu = new MainMenu();
+    render(this._container, this._mainMenu);
+    this._mainMenu.onStatisticsClick(this._toggleStatistics.bind(this));
+  }
+
+  _renderFilter() {
+    this._filterController = new FilterController(this._moviesModel, this._mainMenu.getElement());
+    this._filterController.render();
+  }
+
+  _renderFooter() {
+    this._footerController = new FooterController(this._moviesModel, bodyElement);
+    this._footerController.render();
+  }
+
+  _renderSortComponent() {
+    const oldSortComponent = this._sortComponent;
+    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
+
+    if (oldSortComponent) {
+      replace(this._sortComponent, oldSortComponent);
+    } else {
+      render(this._container, this._sortComponent);
+    }
   }
 
   _renderFilms(films, container) {
@@ -39,11 +89,12 @@ export default class PageController {
     this._movieControllers.forEach((controller) => controller.setDefaultView());
   }
 
-  _onDataChange(controller, film, newFilm) {
+  _onDataChange(controller, film, newFilm, flag) {
     this._api.updateMovie(film.id, newFilm)
       .then((movie) => {
-        this._moviesModel.setMovie(film.id, movie);
+        this._moviesModel.setMovie(film.id, movie, flag);
         controller.render(this._moviesModel.getMovie(newFilm.id));
+        this._renderUserProfile();
       });
   }
 
@@ -74,21 +125,15 @@ export default class PageController {
     this._renderFilms(topRatedFilms, this._topRatedSection.getFilmsListContainer());
   }
 
-  render() {
-    const oldSortComponent = this._sortComponent;
-    const oldMainFilmsSection = this._mainFilmsSection;
-    this._sortComponent = new Sort(this._moviesModel.getActiveSort());
-
-    if (oldSortComponent) {
-      replace(this._sortComponent, oldSortComponent);
-    } else {
-      render(this._container, this._sortComponent);
-    }
-
+  _renderMainContent() {
+    this._renderUserProfile();
+    this._renderSortComponent();
+    const oldFilmsSection = this._mainFilmsSection;
+    this._mainFilmsSection = new MainFilmsSection();
     if (this._moviesModel.getState() === LOADING_STATE) {
       this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
-      if (oldMainFilmsSection) {
-        replace(this._mainFilmsSection, oldMainFilmsSection);
+      if (oldFilmsSection) {
+        replace(this._mainFilmsSection, oldFilmsSection);
       } else {
         render(this._container, this._mainFilmsSection);
       }
@@ -96,23 +141,20 @@ export default class PageController {
     }
     if (this._moviesModel.getCountMovies() === 0 || this._moviesModel.getState() === NO_DATA_STATE) {
       this._mainFilmsSection = new MainFilmsSection(NO_DATA_STATE);
-      if (oldMainFilmsSection) {
-        replace(this._mainFilmsSection, oldMainFilmsSection);
+      if (oldFilmsSection) {
+        replace(this._mainFilmsSection, oldFilmsSection);
       } else {
         render(this._container, this._mainFilmsSection);
       }
       return;
     }
-
-    const films = this._moviesModel.getMovies();
-    const oldFilmsSection = this._mainFilmsSection;
-    this._mainFilmsSection = new MainFilmsSection();
     if (oldFilmsSection) {
       replace(this._mainFilmsSection, oldFilmsSection);
     } else {
       render(this._container, this._mainFilmsSection);
     }
 
+    const films = this._moviesModel.getMovies();
     let showingFilmsCount = MAIN_FILMS_COUNT_ON_START;
     this._sortComponent.onSortChange(this._moviesModel.updateSort.bind(this._moviesModel));
     this._moreButton = new MoreButton();
@@ -140,5 +182,33 @@ export default class PageController {
       }
     };
     this._moreButton.onClick(showMoreFilms);
+    this._statisticsController.setHidden();
+  }
+
+  _hideMainContent() {
+    this._mainFilmsSection.hide();
+    this._sortComponent.hide();
+  }
+
+  _toggleStatistics(evt) {
+    evt.preventDefault();
+    if (this._statisticsController.isHidden) {
+      this._statisticsController.setShown();
+      this._moviesModel.setDefaultSort();
+      this._hideMainContent();
+    } else {
+      this._renderMainContent();
+    }
+  }
+
+  render() {
+    this._renderUserProfile();
+    this._renderMenu();
+    this._renderFilter();
+
+    this._renderMainContent();
+
+    this._renderStatistics();
+    this._renderFooter();
   }
 }
