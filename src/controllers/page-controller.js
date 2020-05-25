@@ -194,6 +194,7 @@ export default class PageController {
     evt.preventDefault();
     if (this._statisticsController.isHidden) {
       this._statisticsController.setShown();
+      this._moviesModel.setDefaultSort();
       this._hideMainContent();
     } else {
       this._renderMainContent();

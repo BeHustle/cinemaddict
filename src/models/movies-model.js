@@ -13,7 +13,6 @@ export default class MoviesModel {
     this._movieUpdateFilter = [];
     this._activeFilter = ``;
     this._state = LOADING_STATE;
-    this._activeSort = `default`;
   }
 
   setFilter(filter) {
@@ -23,6 +22,10 @@ export default class MoviesModel {
 
   getActiveSort() {
     return this._activeSort;
+  }
+
+  setDefaultSort() {
+    this._activeSort = `default`;
   }
 
   setNoData() {
@@ -80,6 +83,9 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = movies;
     this._state = DONE_STATE;
+    if (!this._activeSort) {
+      this.setDefaultSort();
+    }
     this._dataChangeObservers.forEach((cb) => cb());
   }
 

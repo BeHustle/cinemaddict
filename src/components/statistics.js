@@ -40,11 +40,12 @@ export default class Statistics extends AbstractComponent {
   }
 
   _getFilters() {
-    const initialFilter = ``;
-    return this._filtersData.reduce((acc, cv) => {
-      return `${acc} <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" ${cv.value === this._activeFilter ? `checked` : ``} id="statistic-${cv.value}" value="${cv.value}">
-      <label for="statistic-${cv.value}" class="statistic__filters-label">${cv.name}</label>`;
-    }, initialFilter);
+    let initialFilter = ``;
+    this._filtersData.forEach((item, key) => {
+      initialFilter += `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" ${key === this._activeFilter ? `checked` : ``} id="statistic-${key}" value="${key}">
+      <label for="statistic-${key}" class="statistic__filters-label">${item.name}</label>`;
+    });
+    return initialFilter;
   }
 
   getTemplate() {

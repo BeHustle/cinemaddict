@@ -2,24 +2,39 @@ import {render, replace} from '../utils/render';
 import Statistics from '../components/statistics';
 import moment from 'moment';
 
+const PERIOD_FILTERS = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+const addFilter = (name, date) => {
+  return {name, date};
+};
+const FiltersData = new Map();
+FiltersData.set(PERIOD_FILTERS.ALL, addFilter(`All time`, new Date(0)));
+FiltersData.set(PERIOD_FILTERS.TODAY, addFilter(`Today`, moment().startOf(`day`).toDate()));
+FiltersData.set(PERIOD_FILTERS.WEEK, addFilter(`Week`, moment().startOf(`week`).toDate()));
+FiltersData.set(PERIOD_FILTERS.MONTH, addFilter(`Month`, moment().startOf(`month`).toDate()));
+FiltersData.set(PERIOD_FILTERS.YEAR, addFilter(`Year`, moment().startOf(`year`).toDate()));
+
 export default class StatisticsController {
   constructor(moviesModel, container) {
     this._moviesModel = moviesModel;
     this._container = container;
     this._moviesModel.onDataChange(this.render.bind(this));
-    this._statisticsDate = new Date(0);
-    this._activeFilter = `all-time`;
     this.isHidden = true;
   }
 
   _getStatisticsData() {
-    const movies = this._moviesModel.getWatchedMoviesFromDate(this._statisticsDate);
+    const movies = this._moviesModel.getWatchedMoviesFromDate(FiltersData.get(this._activeFilter).date);
     const genres = new Map();
     const statisticsData = {
       genres: [],
       countMovies: movies.length,
       duration: movies.length ? movies.reduce((acc, cv) => acc + cv.duration, 0) : 0,
-      rank: this._moviesModel.getUserRank()
+      rank: this._moviesModel.getUserRank(),
     };
     for (const movie of movies) {
       if (movie.genres) {
@@ -38,23 +53,17 @@ export default class StatisticsController {
     return statisticsData;
   }
 
-  _getFiltersData() {
-    const addFilter = (name, value) => {
-      return {name, value};
-    };
-    const filtersData = [];
-    filtersData.push(addFilter(`All time`, `all-time`));
-    filtersData.push(addFilter(`Today`, `today`));
-    filtersData.push(addFilter(`Week`, `week`));
-    filtersData.push(addFilter(`Month`, `month`));
-    filtersData.push(addFilter(`Year`, `year`));
-    return filtersData;
+  _setDefaultFilter() {
+    this._activeFilter = PERIOD_FILTERS.ALL;
   }
 
   render() {
+    if (!this._activeFilter) {
+      this._setDefaultFilter();
+    }
     const oldStatistics = this._statistics;
     const statisticsData = this._getStatisticsData();
-    this._statistics = new Statistics(statisticsData, this._getFiltersData(), this._activeFilter);
+    this._statistics = new Statistics(statisticsData, FiltersData, this._activeFilter);
     if (oldStatistics) {
       replace(this._statistics, oldStatistics);
     } else {
@@ -64,38 +73,17 @@ export default class StatisticsController {
     if (statisticsData.genres.length) {
       this._statistics.renderChart();
     }
-    this._statistics.onFilterChange(this._updateStatisticsDate.bind(this));
+    this._statistics.onFilterChange(this._updateStatisticsFilter.bind(this));
     if (this.isHidden) {
       this._statistics.hide();
     }
   }
 
-  _updateStatisticsDate(dateName) {
-    if (dateName === this._activeFilter) {
+  _updateStatisticsFilter(filter) {
+    if (filter === this._activeFilter) {
       return;
     }
-    switch (dateName) {
-      case `all-time`:
-        this._statisticsDate = new Date(0);
-        this._activeFilter = `all-time`;
-        break;
-      case `today`:
-        this._statisticsDate = moment().startOf(`day`).toDate();
-        this._activeFilter = `today`;
-        break;
-      case `week`:
-        this._statisticsDate = moment().startOf(`week`).toDate();
-        this._activeFilter = `week`;
-        break;
-      case `month`:
-        this._statisticsDate = moment().startOf(`month`).toDate();
-        this._activeFilter = `month`;
-        break;
-      case `year`:
-        this._statisticsDate = moment().startOf(`year`).toDate();
-        this._activeFilter = `year`;
-        break;
-    }
+    this._activeFilter = filter;
     this.render();
   }
 
@@ -106,8 +94,7 @@ export default class StatisticsController {
 
   setShown() {
     this.isHidden = false;
-    this._statisticsDate = new Date(0);
-    this._activeFilter = `all-time`;
+    this._setDefaultFilter();
     this.render();
     this._statistics.show();
   }
