@@ -1075,6 +1075,9 @@ button {
   padding-top: 50px;
   padding-bottom: 50px;
 }
+.d-none {
+  display: none;
+}
 @keyframes shake {
   0%,
   100% {

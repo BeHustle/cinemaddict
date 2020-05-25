@@ -4,7 +4,8 @@ import {
   LOADING_STATE,
   NO_DATA_STATE,
   MOST_COMMENTED_FILMS_COUNT,
-  TOP_RATED_FILMS_COUNT
+  TOP_RATED_FILMS_COUNT,
+  SORT
 } from '../constants';
 
 export default class MoviesModel {
@@ -13,7 +14,6 @@ export default class MoviesModel {
     this._movieUpdateFilter = [];
     this._activeFilter = ``;
     this._state = LOADING_STATE;
-    this._activeSort = `default`;
   }
 
   setFilter(filter) {
@@ -23,6 +23,10 @@ export default class MoviesModel {
 
   getActiveSort() {
     return this._activeSort;
+  }
+
+  setDefaultSort() {
+    this._activeSort = SORT.BY_DEFAULT;
   }
 
   setNoData() {
@@ -53,9 +57,9 @@ export default class MoviesModel {
 
   _sortMovies(movies) {
     switch (this._activeSort) {
-      case `date`:
+      case SORT.BY_DATE:
         return movies.sort((a, b) => b.date.getTime() - a.date.getTime());
-      case `rating`:
+      case SORT.BY_RATING:
         return movies.sort((a, b) => b.rating * 10 - a.rating * 10);
       default:
         return movies.sort((a, b) => parseInt(a.id, 10) - parseInt(b.id, 10));
@@ -80,6 +84,9 @@ export default class MoviesModel {
   setMovies(movies) {
     this._movies = movies;
     this._state = DONE_STATE;
+    if (!this._activeSort) {
+      this.setDefaultSort();
+    }
     this._dataChangeObservers.forEach((cb) => cb());
   }
 
@@ -108,17 +115,38 @@ export default class MoviesModel {
     return this._movies[index];
   }
 
-  setMovie(id, movie) {
+  setMovie(id, movie, flag) {
     const index = this._movies.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return;
     }
     this._movies = changeArrayElement(this._movies, movie, index);
-    if (this._activeFilter && !movie[this._activeFilter]) {
+    if (this._activeFilter === flag) {
       this._dataChangeObservers.forEach((cb) => cb());
     } else {
       this._movieUpdateFilter.forEach((cb) => cb());
     }
+  }
+
+  getWatchedMoviesFromDate(date) {
+    if (!this._movies) {
+      return [];
+    }
+    return this._movies.filter((movie) => movie.isWatched && (movie.watchingDate.getTime() >= date.getTime()));
+  }
+
+  getUserRank() {
+    if (!this._movies) {
+      return ``;
+    }
+    const showedFilmsCount = this._movies.filter((movie) => movie.isWatched).length;
+    if (showedFilmsCount < 11) {
+      return `Novice`;
+    }
+    if (showedFilmsCount < 21) {
+      return `Fan`;
+    }
+    return `Movie buff`;
   }
 }
