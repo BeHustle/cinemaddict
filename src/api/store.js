@@ -47,12 +47,4 @@ export default class Store {
   getMovies() {
     return Object.values(this.getItems().movies);
   }
-
-  removeComment(key) {
-    const store = this.getItems();
-
-    delete store[key];
-
-    this._storage.setItem(this._storeKey, JSON.stringify(store));
-  }
 }
