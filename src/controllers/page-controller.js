@@ -1,5 +1,7 @@
 import {render, replace} from '../utils/render';
 import API from '../api';
+import Provider from '../api/provider';
+import Store from '../api/store';
 import MostCommentedFilmsSection from '../components/most-commented-films-section';
 import TopRatedFilmsSection from '../components/top-rated-films-section';
 import MainFilmsSection from '../components/main-films-section';
@@ -17,15 +19,18 @@ import {
   NO_DATA_STATE,
   URL,
   API_KEY,
+  STORE_NAME
 } from '../constants';
 import StatisticsController from './statistics-controller';
 
+const api = new API(URL, API_KEY);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const bodyElement = document.querySelector(`body`);
 const headerElement = document.querySelector(`.header`);
 
 export default class PageController {
   constructor(moviesModel, container) {
-    this._api = new API(URL, API_KEY);
     this._container = container;
     this._moviesModel = moviesModel;
     this._moviesModel.onDataChange(this._renderMainContent.bind(this));
@@ -90,7 +95,7 @@ export default class PageController {
   }
 
   _onDataChange(controller, film, newFilm, flag) {
-    this._api.updateMovie(film.id, newFilm)
+    apiWithProvider.updateMovie(film.id, newFilm)
       .then((movie) => {
         this._moviesModel.setMovie(film.id, movie, flag);
         controller.render(this._moviesModel.getMovie(newFilm.id));
@@ -199,6 +204,14 @@ export default class PageController {
     } else {
       this._renderMainContent();
     }
+  }
+
+  disableComments() {
+    this._movieControllers.forEach((controller) => controller.disableComments());
+  }
+
+  enableComments() {
+    this._movieControllers.forEach((controller) => controller.enableComments());
   }
 
   render() {

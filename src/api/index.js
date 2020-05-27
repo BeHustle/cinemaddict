@@ -50,6 +50,16 @@ export default class API {
       .then(MovieModel.parseMovie);
   }
 
+  sync(data) {
+    return this._load({
+      path: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
   _checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
