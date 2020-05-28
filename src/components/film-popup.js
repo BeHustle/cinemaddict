@@ -24,7 +24,9 @@ export default class FilmPopup extends AbstractSmartComponent {
     }, ``);
     return `<tr class="film-details__row">
       <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
-      <td class="film-details__cell">${genresList}</td>
+      <td class="film-details__cell">
+        ${genresList}
+      </td>
     </tr>`;
   }
 
@@ -262,14 +264,14 @@ export default class FilmPopup extends AbstractSmartComponent {
   _disableForm() {
     this
       .getElement()
-      .querySelectorAll(`form input, form textarea`)
+      .querySelectorAll(`.film-details__emoji-item, form textarea`)
       .forEach((elem) => elem.setAttribute(`disabled`, `disabled`));
   }
 
   _enableForm() {
     this
       .getElement()
-      .querySelectorAll(`form input, form textarea`)
+      .querySelectorAll(`.film-details__emoji-item, form textarea`)
       .forEach((elem) => elem.removeAttribute(`disabled`));
   }
 
@@ -354,5 +356,27 @@ export default class FilmPopup extends AbstractSmartComponent {
       .forEach((item) => {
         item.addEventListener(`change`, this._onEmojiChange.bind(this));
       });
+  }
+
+  disableComments() {
+    this
+      .getElement()
+      .querySelectorAll(`.film-details__comment-delete`)
+      .forEach((btn) => {
+        btn.classList.add(`d-none`);
+        btn.setAttribute(`disabled`, `disabled`);
+      });
+    this._disableForm();
+  }
+
+  enableComments() {
+    this
+      .getElement()
+      .querySelectorAll(`.film-details__comment-delete`)
+      .forEach((btn) => {
+        btn.classList.remove(`d-none`);
+        btn.removeAttribute(`disabled`);
+      });
+    this._enableForm();
   }
 }

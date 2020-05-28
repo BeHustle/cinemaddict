@@ -1,4 +1,4 @@
-import {ESCAPE_KEY, URL, API_KEY, FLAGS} from '../constants';
+import {ESCAPE_KEY, URL, API_KEY, FilterType, STORE_NAME} from '../constants';
 import {render, replace} from '../utils/render';
 import API from '../api';
 import FilmCard from '../components/film-card';
@@ -6,6 +6,12 @@ import FilmPopup from '../components/film-popup';
 import CommentsModel from '../models/comments-model';
 import MovieModel from '../models/movie-model';
 import CommentModel from '../models/comment-model';
+import Store from '../api/store';
+import Provider from '../api/provider';
+
+const api = new API(URL, API_KEY);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const bodyElement = document.querySelector(`body`);
 export default class MovieController {
@@ -14,27 +20,26 @@ export default class MovieController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._onCommentsUpdate = onCommentsUpdate;
-    this._api = new API(URL, API_KEY);
 
     this._closePopupOnEscape = this._closePopupOnEscape.bind(this);
 
     this._commentsModel = new CommentsModel();
   }
 
-  _changeFlag(film, flag) {
+  _changeFilterType(film, filterType) {
     const newFilm = MovieModel.clone(film);
-    newFilm[flag] = !newFilm[flag];
-    if (flag === FLAGS.WATCHED && newFilm.flag) {
+    newFilm[filterType] = !newFilm[filterType];
+    if (filterType === FilterType.WATCHED && newFilm.filterType) {
       newFilm.watchingDate = new Date();
     }
-    this._onDataChange(this, film, newFilm, flag);
+    this._onDataChange(this, film, newFilm, filterType);
   }
 
   _setCommentDeleteHandler() {
     this._filmPopup.onCommentDelete((evt) => {
-      const id = parseInt(evt.currentTarget.dataset.comment, 10);
+      const commentId = parseInt(evt.currentTarget.dataset.comment, 10);
       this._filmPopup.setCommentDeleting(evt);
-      this._api.deleteComment(id)
+      api.deleteComment(commentId)
         .then(() => {
           this._updateComments();
           this._onCommentsUpdate();
@@ -53,7 +58,7 @@ export default class MovieController {
         emoji: comment.emoji,
         date: new Date(),
       });
-      this._api.addComment(this._film.id, newComment).then(() => {
+      api.addComment(this._film.id, newComment).then(() => {
         this._updateComments();
         this._onCommentsUpdate();
         this._filmPopup.onSuccessCommentAdd();
@@ -65,15 +70,15 @@ export default class MovieController {
 
   _setDataChangeHandlers(film, component) {
     component.onAddToWatchlist((evt) => {
-      this._changeFlag(film, FLAGS.WATCHLIST);
+      this._changeFilterType(film, FilterType.WATCHLIST);
       evt.preventDefault();
     });
     component.onMarkAsWatched((evt) => {
-      this._changeFlag(film, FLAGS.WATCHED);
+      this._changeFilterType(film, FilterType.WATCHED);
       evt.preventDefault();
     });
     component.onMarkAsFavorite((evt) => {
-      this._changeFlag(film, FLAGS.FAVORITE);
+      this._changeFilterType(film, FilterType.FAVORITE);
       evt.preventDefault();
     });
   }
@@ -98,6 +103,14 @@ export default class MovieController {
     this.deleteFilmPopup();
   }
 
+  disableComments() {
+    this._filmPopup.disableComments();
+  }
+
+  enableComments() {
+    this._filmPopup.enableComments();
+  }
+
   _setPopupHandlers() {
     this._filmPopup.onClosePopup(this.deleteFilmPopup.bind(this));
     this._filmPopup.onCommentsFormSubmit(this._addComment.bind(this));
@@ -106,7 +119,7 @@ export default class MovieController {
   }
 
   _updateComments() {
-    this._api.getComments(this._film.id)
+    apiWithProvider.getComments(this._film.id)
       .then((comments) => {
         this._commentsModel.setComments(comments);
         this._film.setComments(comments.map((item) => item.id.toString()));

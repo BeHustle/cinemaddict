@@ -15,6 +15,16 @@ export default class CommentModel {
     };
   }
 
+  toJSON() {
+    return {
+      "id": this.id.toString(),
+      "author": this.author,
+      "comment": this.text,
+      "emotion": this.emoji,
+      "date": this.date.toJSON()
+    };
+  }
+
   static parseComment(data) {
     return new CommentModel(data);
   }
