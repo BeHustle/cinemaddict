@@ -1,12 +1,10 @@
-
-
 export default class Store {
   constructor(key, storage) {
     this._storage = storage;
     this._storeKey = key;
   }
 
-  getItems() {
+  _getItems() {
     try {
       return JSON.parse(this._storage.getItem(this._storeKey)) || {};
     } catch (err) {
@@ -14,37 +12,37 @@ export default class Store {
     }
   }
 
+  _updateStore(newStore) {
+    this._storage.setItem(this._storeKey, JSON.stringify(newStore));
+  }
+
   setComments(comments) {
-    const store = this.getItems();
+    const store = this._getItems();
     store.comments = Object.assign({}, store.comments, comments);
-    this._storage.setItem(this._storeKey, JSON.stringify(store));
+    this._updateStore(store);
   }
 
   setMovies(movies) {
-    const store = this.getItems();
+    const store = this._getItems();
     store.movies = Object.assign({}, store.movies, movies);
-    this._storage.setItem(this._storeKey, JSON.stringify(store));
+    this._updateStore(store);
   }
 
   setMovie(id, movie) {
-    const store = this.getItems();
+    const store = this._getItems();
     store.movies[id] = movie;
-    this._storage.setItem(this._storeKey, JSON.stringify(store));
+    this._updateStore(store);
   }
 
   getComments(filmId) {
-    const commentsStore = this.getItems().comments;
-    const filmComments = this.getItems().movies[filmId].comments;
-    const comments = [];
-    filmComments.forEach((commentId) => {
-      if (commentsStore[commentId]) {
-        comments.push(commentsStore[commentId]);
-      }
-    });
-    return comments;
+    const commentsStore = this._getItems().comments;
+    const filmComments = this._getItems().movies[filmId].comments;
+    return filmComments
+      .filter((commentId) => commentsStore[commentId])
+      .map((commentId) => commentsStore[commentId]);
   }
 
   getMovies() {
-    return Object.values(this.getItems().movies);
+    return Object.values(this._getItems().movies);
   }
 }

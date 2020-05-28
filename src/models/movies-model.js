@@ -5,7 +5,8 @@ import {
   NO_DATA_STATE,
   MOST_COMMENTED_FILMS_COUNT,
   TOP_RATED_FILMS_COUNT,
-  SORT
+  SORT,
+  USER_RANK
 } from '../constants';
 
 export default class MoviesModel {
@@ -115,14 +116,14 @@ export default class MoviesModel {
     return this._movies[index];
   }
 
-  setMovie(id, movie, flag) {
+  setMovie(id, movie, filter) {
     const index = this._movies.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return;
     }
     this._movies = changeArrayElement(this._movies, movie, index);
-    if (this._activeFilter === flag) {
+    if (this._activeFilter === filter) {
       this._dataChangeObservers.forEach((cb) => cb());
     } else {
       this._movieUpdateFilter.forEach((cb) => cb());
@@ -137,16 +138,16 @@ export default class MoviesModel {
   }
 
   getUserRank() {
-    if (!this._movies) {
+    if (!this.getMostCommentedMovies()) {
       return ``;
     }
     const showedFilmsCount = this._movies.filter((movie) => movie.isWatched).length;
     if (showedFilmsCount < 11) {
-      return `Novice`;
+      return USER_RANK.NOVICE;
     }
     if (showedFilmsCount < 21) {
-      return `Fan`;
+      return USER_RANK.FAN;
     }
-    return `Movie buff`;
+    return USER_RANK.MOVIE_BUFF;
   }
 }

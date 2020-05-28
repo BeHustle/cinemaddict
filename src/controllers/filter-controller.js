@@ -1,3 +1,4 @@
+import {FLAG} from '../constants';
 import AbstractComponent from '../components/abstract-component';
 import Filter from '../components/filter';
 import {render, replace} from '../utils/render';
@@ -31,9 +32,9 @@ export default class FilterController extends AbstractComponent {
     this._films = this._moviesModel.getAllMovies();
     return [
       this._getFilterCount(`All movies`),
-      this._getFilterCount(`History`, `isWatched`),
-      this._getFilterCount(`Watchlist`, `inWatchlist`),
-      this._getFilterCount(`Favorites`, `isFavorite`),
+      this._getFilterCount(`History`, FLAG.WATCHED),
+      this._getFilterCount(`Watchlist`, FLAG.WATCHLIST),
+      this._getFilterCount(`Favorites`, FLAG.FAVORITE),
     ];
   }
 

@@ -11,6 +11,7 @@ import MoreButton from '../components/more-button';
 import MovieController from './movie-controller';
 import FooterController from './footer-controller';
 import FilterController from './filter-controller';
+import StatisticsController from './statistics-controller';
 import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
@@ -19,15 +20,17 @@ import {
   NO_DATA_STATE,
   URL,
   API_KEY,
-  STORE_NAME
+  STORE_NAME,
+  BODY_SELECTOR,
+  HEADER_SELECTOR
 } from '../constants';
-import StatisticsController from './statistics-controller';
+
 
 const api = new API(URL, API_KEY);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
-const bodyElement = document.querySelector(`body`);
-const headerElement = document.querySelector(`.header`);
+const bodyElement = document.querySelector(BODY_SELECTOR);
+const headerElement = document.querySelector(HEADER_SELECTOR);
 
 export default class PageController {
   constructor(moviesModel, container) {

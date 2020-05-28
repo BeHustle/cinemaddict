@@ -19,9 +19,15 @@ export default class FilmPopup extends AbstractSmartComponent {
     if (genres.length === 0) {
       return ``;
     }
-    return genres.reduce((acc, cv) => {
+    const genresList = genres.reduce((acc, cv) => {
       return `${acc} <span class="film-details__genre">${cv}</span>`;
     }, ``);
+    return `<tr class="film-details__row">
+      <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+      <td class="film-details__cell">
+        ${genresList}
+      </td>
+    </tr>`;
   }
 
   _createFilmControls(isWatched, inWatchlist, isFavorite) {

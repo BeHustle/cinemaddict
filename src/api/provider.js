@@ -1,9 +1,7 @@
 import MovieModel from '../models/movie-model';
 import CommentModel from '../models/comment-model';
 
-const isOnline = () => {
-  return window.navigator.onLine;
-};
+const isOnline = () => window.navigator.onLine;
 
 const createStoreStructure = (items) => {
   return items.reduce((acc, current) => {

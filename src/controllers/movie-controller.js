@@ -1,4 +1,4 @@
-import {ESCAPE_KEY, URL, API_KEY, FLAGS, STORE_NAME} from '../constants';
+import {ESCAPE_KEY, URL, API_KEY, FLAG, STORE_NAME} from '../constants';
 import {render, replace} from '../utils/render';
 import API from '../api';
 import FilmCard from '../components/film-card';
@@ -29,7 +29,7 @@ export default class MovieController {
   _changeFlag(film, flag) {
     const newFilm = MovieModel.clone(film);
     newFilm[flag] = !newFilm[flag];
-    if (flag === FLAGS.WATCHED && newFilm.flag) {
+    if (flag === FLAG.WATCHED && newFilm.flag) {
       newFilm.watchingDate = new Date();
     }
     this._onDataChange(this, film, newFilm, flag);
@@ -39,7 +39,7 @@ export default class MovieController {
     this._filmPopup.onCommentDelete((evt) => {
       const commentId = parseInt(evt.currentTarget.dataset.comment, 10);
       this._filmPopup.setCommentDeleting(evt);
-      api.deleteComment(commentId, this._film.id)
+      api.deleteComment(commentId)
         .then(() => {
           this._updateComments();
           this._onCommentsUpdate();
@@ -70,15 +70,15 @@ export default class MovieController {
 
   _setDataChangeHandlers(film, component) {
     component.onAddToWatchlist((evt) => {
-      this._changeFlag(film, FLAGS.WATCHLIST);
+      this._changeFlag(film, FLAG.WATCHLIST);
       evt.preventDefault();
     });
     component.onMarkAsWatched((evt) => {
-      this._changeFlag(film, FLAGS.WATCHED);
+      this._changeFlag(film, FLAG.WATCHED);
       evt.preventDefault();
     });
     component.onMarkAsFavorite((evt) => {
-      this._changeFlag(film, FLAGS.FAVORITE);
+      this._changeFlag(film, FLAG.FAVORITE);
       evt.preventDefault();
     });
   }
