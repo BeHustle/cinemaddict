@@ -1,4 +1,4 @@
-import {ESCAPE_KEY, URL, API_KEY, FLAG, STORE_NAME} from '../constants';
+import {ESCAPE_KEY, URL, API_KEY, FilterType, STORE_NAME} from '../constants';
 import {render, replace} from '../utils/render';
 import API from '../api';
 import FilmCard from '../components/film-card';
@@ -26,13 +26,13 @@ export default class MovieController {
     this._commentsModel = new CommentsModel();
   }
 
-  _changeFlag(film, flag) {
+  _changeFilterType(film, filterType) {
     const newFilm = MovieModel.clone(film);
-    newFilm[flag] = !newFilm[flag];
-    if (flag === FLAG.WATCHED && newFilm.flag) {
+    newFilm[filterType] = !newFilm[filterType];
+    if (filterType === FilterType.WATCHED && newFilm.filterType) {
       newFilm.watchingDate = new Date();
     }
-    this._onDataChange(this, film, newFilm, flag);
+    this._onDataChange(this, film, newFilm, filterType);
   }
 
   _setCommentDeleteHandler() {
@@ -70,15 +70,15 @@ export default class MovieController {
 
   _setDataChangeHandlers(film, component) {
     component.onAddToWatchlist((evt) => {
-      this._changeFlag(film, FLAG.WATCHLIST);
+      this._changeFilterType(film, FilterType.WATCHLIST);
       evt.preventDefault();
     });
     component.onMarkAsWatched((evt) => {
-      this._changeFlag(film, FLAG.WATCHED);
+      this._changeFilterType(film, FilterType.WATCHED);
       evt.preventDefault();
     });
     component.onMarkAsFavorite((evt) => {
-      this._changeFlag(film, FLAG.FAVORITE);
+      this._changeFilterType(film, FilterType.FAVORITE);
       evt.preventDefault();
     });
   }

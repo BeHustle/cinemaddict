@@ -16,21 +16,19 @@ import Sort from '../components/sort';
 import {
   MAIN_FILMS_COUNT_BY_BUTTON,
   MAIN_FILMS_COUNT_ON_START,
-  LOADING_STATE,
-  NO_DATA_STATE,
+  State,
   URL,
+  Selector,
   API_KEY,
   STORE_NAME,
-  BODY_SELECTOR,
-  HEADER_SELECTOR
 } from '../constants';
 
 
 const api = new API(URL, API_KEY);
 const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
-const bodyElement = document.querySelector(BODY_SELECTOR);
-const headerElement = document.querySelector(HEADER_SELECTOR);
+const bodyElement = document.querySelector(Selector.BODY);
+const headerElement = document.querySelector(Selector.HEADER);
 
 export default class PageController {
   constructor(moviesModel, container) {
@@ -97,10 +95,10 @@ export default class PageController {
     this._movieControllers.forEach((controller) => controller.setDefaultView());
   }
 
-  _onDataChange(controller, film, newFilm, flag) {
+  _onDataChange(controller, film, newFilm, filterType) {
     apiWithProvider.updateMovie(film.id, newFilm)
       .then((movie) => {
-        this._moviesModel.setMovie(film.id, movie, flag);
+        this._moviesModel.setMovie(film.id, movie, filterType);
         controller.render(this._moviesModel.getMovie(newFilm.id));
         this._renderUserProfile();
       });
@@ -138,8 +136,8 @@ export default class PageController {
     this._renderSortComponent();
     const oldFilmsSection = this._mainFilmsSection;
     this._mainFilmsSection = new MainFilmsSection();
-    if (this._moviesModel.getState() === LOADING_STATE) {
-      this._mainFilmsSection = new MainFilmsSection(LOADING_STATE);
+    if (this._moviesModel.getState() === State.LOADING) {
+      this._mainFilmsSection = new MainFilmsSection(State.LOADING);
       if (oldFilmsSection) {
         replace(this._mainFilmsSection, oldFilmsSection);
       } else {
@@ -147,8 +145,8 @@ export default class PageController {
       }
       return;
     }
-    if (this._moviesModel.getCountMovies() === 0 || this._moviesModel.getState() === NO_DATA_STATE) {
-      this._mainFilmsSection = new MainFilmsSection(NO_DATA_STATE);
+    if (this._moviesModel.getCountMovies() === 0 || this._moviesModel.getState() === State.NO_DATA) {
+      this._mainFilmsSection = new MainFilmsSection(State.NO_DATA);
       if (oldFilmsSection) {
         replace(this._mainFilmsSection, oldFilmsSection);
       } else {

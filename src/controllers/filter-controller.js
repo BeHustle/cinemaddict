@@ -1,4 +1,4 @@
-import {FLAG} from '../constants';
+import {FilterType} from '../constants';
 import AbstractComponent from '../components/abstract-component';
 import Filter from '../components/filter';
 import {render, replace} from '../utils/render';
@@ -13,18 +13,18 @@ export default class FilterController extends AbstractComponent {
     this._container = container;
   }
 
-  _getCountFilmsByFlag(flag) {
+  _getCountFilmsByFilterType(filterType) {
     if (!this._films) {
       return 0;
     }
-    return flag ? this._films.filter((film) => film[flag]).length : this._films.length;
+    return filterType ? this._films.filter((film) => film[filterType]).length : this._films.length;
   }
 
-  _getFilterCount(title, flag = ``) {
+  _getFilterCount(title, filterType = ``) {
     return {
       title,
-      flag,
-      count: this._getCountFilmsByFlag(flag),
+      filterType,
+      count: this._getCountFilmsByFilterType(filterType),
     };
   }
 
@@ -32,9 +32,9 @@ export default class FilterController extends AbstractComponent {
     this._films = this._moviesModel.getAllMovies();
     return [
       this._getFilterCount(`All movies`),
-      this._getFilterCount(`History`, FLAG.WATCHED),
-      this._getFilterCount(`Watchlist`, FLAG.WATCHLIST),
-      this._getFilterCount(`Favorites`, FLAG.FAVORITE),
+      this._getFilterCount(`History`, FilterType.WATCHED),
+      this._getFilterCount(`Watchlist`, FilterType.WATCHLIST),
+      this._getFilterCount(`Favorites`, FilterType.FAVORITE),
     ];
   }
 

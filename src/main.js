@@ -1,4 +1,4 @@
-import {API_KEY, URL, STORE_NAME, MAIN_SELECTOR} from './constants';
+import {API_KEY, URL, STORE_NAME, Selector} from './constants';
 import API from './api';
 import Provider from './api/provider';
 import Store from './api/store';
@@ -10,7 +10,7 @@ const store = new Store(STORE_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 const moviesModel = new MoviesModel();
 
-const mainElement = document.querySelector(MAIN_SELECTOR);
+const mainElement = document.querySelector(Selector.MAIN);
 
 const pageController = new PageController(moviesModel, mainElement);
 

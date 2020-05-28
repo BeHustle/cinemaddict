@@ -21,8 +21,6 @@ export default class MovieModel {
     this.isWatched = data.user_details.already_watched;
     this.inWatchlist = data.user_details.watchlist;
     this.watchingDate = new Date(data.user_details.watching_date);
-
-    this._commentsUpdateObservers = [];
   }
 
   toRAW() {
@@ -57,11 +55,6 @@ export default class MovieModel {
 
   setComments(comments) {
     this.comments = comments;
-    this._commentsUpdateObservers.forEach((cb) => cb());
-  }
-
-  _onCommentsUpdate(cb) {
-    this._commentsUpdateObservers.push(cb);
   }
 
   getCommentsCount() {
