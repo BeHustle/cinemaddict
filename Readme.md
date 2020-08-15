@@ -7,6 +7,6 @@
 #### Styleguide - ES6 (eslint)
 #### Дополнительные библиотеки: moment, chart.js, he
 
-##### Сайт проекта:
+##### Сайт проекта: <a href="https://behustle.github.io/cinemaddict/">Киноман</a>
 
 ##### Автор: Владислав Клева
